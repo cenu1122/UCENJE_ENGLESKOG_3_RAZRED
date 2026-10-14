@@ -1,238 +1,172 @@
+
 <!DOCTYPE html>
 <html lang="bs">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engleski za 3. razred | DocBizHub Kids</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0fdf4;
-            color: #1f2937;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: #ffffff;
-            border-bottom: 2px solid #bbf7d0;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #15803d;
-            text-decoration: none;
-        }
-
-        .btn-nav {
-            background: #16a34a;
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-        }
-
-        .btn-nav:hover {
-            background: #15803d;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            color: #ffffff;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .main-container {
-            flex: 1;
-            padding: 30px 20px;
-            max-width: 900px;
-            margin: 0 auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .card {
-            background: #fff;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-left: 6px solid #22c55e;
-        }
-
-        .card h2 {
-            font-size: 1.4rem;
-            color: #166534;
-            margin-bottom: 12px;
-        }
-
-        .grid-vokabular {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .vocab-box {
-            background: #f7fee7;
-            border: 2px solid #bef264;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .vocab-box .en {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #3f6212;
-        }
-
-        .vocab-box .bs {
-            font-size: 0.95rem;
-            color: #4d7c0f;
-            margin-top: 5px;
-        }
-
-        .quiz-option {
-            display: block;
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            border: 2px solid #bbf7d0;
-            border-radius: 10px;
-            background: #f7fee7;
-            cursor: pointer;
-            text-align: left;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .quiz-option:hover {
-            background: #dcfce7;
-            border-color: #16a34a;
-        }
-
-        .feedback {
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        footer {
-            background-color: #14532d;
-            color: #bbf7d0;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: auto;
-            font-size: 0.9rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engleski kroz igru!</title>
+<style>
+:root{--blue:#315bea;--purple:#7856d9;--ink:#202747;--bg:#f4f6ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(120deg,#315bea,#8b5ce8);color:white;padding:26px 18px;text-align:center}
+header h1{margin:0 0 8px;font-size:clamp(26px,5vw,42px)}
+header p{margin:0;font-size:16px}
+main{max-width:1000px;margin:auto;padding:18px}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.stat{background:white;border-radius:16px;padding:14px;flex:1;min-width:120px;text-align:center;box-shadow:0 3px 12px #26346a12}
+.stat strong{display:block;font-size:24px;color:var(--blue);margin-bottom:4px}
+h2{font-size:24px}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.lesson{border:0;background:white;border-radius:18px;padding:18px 10px;text-align:center;cursor:pointer;box-shadow:0 3px 12px #26346a12;color:var(--ink);font-size:16px;transition:.15s}
+.lesson:hover{transform:translateY(-3px);outline:2px solid #b7c5ff}
+.lesson .emoji{font-size:34px;display:block;margin-bottom:10px}
+.panel{background:white;border-radius:20px;padding:22px;margin-top:20px;box-shadow:0 3px 15px #26346a12}
+.hidden{display:none}
+.word{background:#f0f3ff;border-radius:16px;padding:18px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.word b{font-size:22px}
+button{font:inherit}
+.action{background:var(--blue);color:white;border:0;border-radius:12px;padding:12px 16px;cursor:pointer;font-weight:bold}
+.action:disabled{opacity:.45;cursor:default}
+.sound{border:0;background:#e6ebff;border-radius:12px;padding:10px 13px;cursor:pointer}
+#question{font-size:23px;font-weight:bold;margin:16px 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.answer{padding:14px;border:2px solid #e0e5fa;border-radius:12px;background:white;cursor:pointer}
+.answer:hover{border-color:var(--blue)}
+.answer:disabled{cursor:default}
+#feedback{font-weight:bold;min-height:28px;margin:14px 0}
+footer{text-align:center;color:#6b7190;padding:25px}
+@media(max-width:450px){main{padding:12px}.panel{padding:16px}.answers{grid-template-columns:1fr}.word b{font-size:19px}}
+</style>
 </head>
-
 <body>
+<header>
+  <h1>🌟 Engleski kroz igru!</h1>
+  <p>Learn English with fun — Uči engleski kroz zabavu!</p>
+</header>
+<main>
+  <div class="stats">
+    <div class="stat"><strong id="points">0 ⭐</strong>Bodovi</div>
+    <div class="stat"><strong id="done">0 / 8</strong>Završene lekcije</div>
+  </div>
 
-    <header>
-        <a href="#" class="logo">🌱 DocBizHub - Engleski za 3. razred</a>
-        <a href="DASHBOARD.html" class="btn-nav">⬅ Nazad</a>
-    </header>
+  <h2>📚 Izaberi lekciju</h2>
+  <p>Klikni na temu, nauči nove riječi i isprobaj svoje znanje!</p>
+  <div class="lessons" id="lessons"></div>
 
-    <section class="hero">
-        <h1>Let's Learn English! 🎈</h1>
-        <p>Zabavno učenje engleskog jezika kroz riječi, boje i igru za treći razred.</p>
-    </section>
+  <section class="panel hidden" id="study">
+    <h2 id="lessonTitle">Lekcija</h2>
+    <p id="lessonIntro"></p>
+    <div id="words"></div>
+    <button class="action" onclick="startQuiz()">🎯 Započni kviz</button>
+    <button class="sound" onclick="speak('Well done!')">🔊 Poslušaj: Well done!</button>
+  </section>
 
-    <main class="main-container">
-        
-        <!-- Vokabular -->
-        <div class="card">
-            <h2>📚 Lekcija: Životinje i boje (Animals & Colors)</h2>
-            <p>Upoznaj nove riječi i pokušaj ih zapamtiti:</p>
-            
-            <div class="grid-vokabular">
-                <div class="vocab-box">
-                    <div class="en">Cat 🐱</div>
-                    <div class="bs">Mačka</div>
-                </div>
-                <div class="vocab-box">
-                    <div class="en">Dog 🐶</div>
-                    <div class="bs">Pas</div>
-                </div>
-                <div class="vocab-box">
-                    <div class="en">Red 🔴</div>
-                    <div class="bs">Crvena</div>
-                </div>
-                <div class="vocab-box">
-                    <div class="en">Blue 🔵</div>
-                    <div class="bs">Plava</div>
-                </div>
-            </div>
-        </div>
+  <section class="panel hidden" id="quiz">
+    <h2>🧠 Vrijeme za kviz!</h2>
+    <div id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div id="feedback" aria-live="polite"></div>
+    <button class="action hidden" id="next" onclick="nextQuestion()">Sljedeće ➜</button>
+    <button class="sound" onclick="showLessons()">← Sve lekcije</button>
+  </section>
+</main>
+<footer>💛 Mali koraci, velike riječi! Keep learning!</footer>
 
-        <!-- Mini Kviz -->
-        <div class="card">
-            <h2>🎮 Mini Kviz Provjera Znanja</h2>
-            <p id="questionText" style="margin-bottom: 15px; font-weight: bold;">Kako se na engleskom kaže "Pas"?</p>
-            
-            <button class="quiz-option" onclick="provjeriOdgovor(false)">A) Cat</button>
-            <button class="quiz-option" onclick="provjeriOdgovor(true)">B) Dog</button>
-            <button class="quiz-option" onclick="provjeriOdgovor(false)">C) Red</button>
+<script>
+const lessons=[
+ {id:"greetings",name:"Pozdravi",emoji:"👋",intro:"Pozdravi prijatelje na engleskom.",words:[["Hello","Zdravo"],["Good morning","Dobro jutro"],["Goodbye","Doviđenja"],["Thank you","Hvala"],["Please","Molim"]]},
+ {id:"animals",name:"Životinje",emoji:"🐶",intro:"Upoznaj životinje na engleskom.",words:[["Cat","Mačka"],["Dog","Pas"],["Bird","Ptica"],["Fish","Riba"],["Rabbit","Zec"]]},
+ {id:"colors",name:"Boje",emoji:"🎨",intro:"Koje su tvoje omiljene boje?",words:[["Red","Crvena"],["Blue","Plava"],["Green","Zelena"],["Yellow","Žuta"],["Purple","Ljubičasta"]]},
+ {id:"numbers",name:"Brojevi",emoji:"🔢",intro:"Nauči brojati na engleskom.",words:[["One","Jedan"],["Two","Dva"],["Three","Tri"],["Four","Četiri"],["Five","Pet"]]},
+ {id:"food",name:"Hrana",emoji:"🍎",intro:"Ukusne riječi za svaki dan!",words:[["Apple","Jabuka"],["Bread","Hljeb"],["Milk","Mlijeko"],["Water","Voda"],["Banana","Banana"]]},
+ {id:"school",name:"Škola",emoji:"🎒",intro:"Riječi koje koristimo u školi.",words:[["Book","Knjiga"],["Pencil","Olovka"],["School","Škola"],["Teacher","Učitelj/učiteljica"],["Friend","Prijatelj"]]},
+ {id:"family",name:"Porodica",emoji:"👨‍👩‍👧",intro:"Predstavi svoju porodicu.",words:[["Mother","Majka"],["Father","Otac"],["Sister","Sestra"],["Brother","Brat"],["Family","Porodica"]]},
+ {id:"body",name:"Dijelovi tijela",emoji:"🧒",intro:"Nauči imenovati dijelove tijela.",words:[["Head","Glava"],["Eyes","Oči"],["Nose","Nos"],["Hands","Ruke"],["Feet","Stopala"]]}
+];
+let current=null,questions=[],qIndex=0,sessionScore=0;
+let points=Number(localStorage.getItem("engPoints")||0);
+let completed=JSON.parse(localStorage.getItem("engDone")||"[]");
+const $=id=>document.getElementById(id);
 
-            <div id="feedbackMessage" class="feedback"></div>
-        </div>
-
-    </main>
-
-    <footer>
-        <p>© <span id="currentYear"></span> DocBizHub. Sva prava zadržana.</p>
-    </footer>
-
-    <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        function provjeriOdgovor(isTacan) {
-            const feedback = document.getElementById('feedbackMessage');
-            if (isTacan) {
-                feedback.style.color = "#16a34a";
-                feedback.textContent = "Bravo! Odgovor je tačan! 🌟";
-            } else {
-                feedback.style.color = "#dc2626";
-                feedback.textContent = "Netačno, pokušaj ponovo! 💪";
-            }
-        }
-    </script>
-
+function render(){
+ $("points").textContent=points+" ⭐";
+ $("done").textContent=completed.length+" / "+lessons.length;
+ $("lessons").innerHTML=lessons.map(l=>`
+ <button class="lesson" onclick="openLesson('${l.id}')">
+ <span class="emoji">${l.emoji}</span><b>${l.name}</b>
+ <div style="margin-top:8px;color:#69718d;font-size:13px">${completed.includes(l.id)?"✅ Završeno":"5 novih riječi"}</div>
+ </button>`).join("");
+}
+function openLesson(id){
+ current=lessons.find(l=>l.id===id);
+ $("lessonTitle").textContent=current.emoji+" "+current.name;
+ $("lessonIntro").textContent=current.intro;
+ $("words").innerHTML=current.words.map(w=>`
+ <div class="word"><div><b>${w[0]}</b><br><span>${w[1]}</span></div>
+ <button class="sound" onclick="speak(${JSON.stringify(w[0])})" aria-label="Poslušaj ${w[0]}">🔊 Slušaj</button></div>`).join("");
+ $("study").classList.remove("hidden");
+ $("quiz").classList.add("hidden");
+ $("study").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function speak(word){
+ if(!("speechSynthesis" in window)){alert("Ovaj preglednik ne podržava izgovor naglas.");return}
+ speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(word);
+ utterance.lang="en-GB";utterance.rate=.8;
+ speechSynthesis.speak(utterance);
+}
+function startQuiz(){
+ questions=current.words.map(w=>({en:w[0],bs:w[1]}));
+ questions.sort(()=>Math.random()-.5);
+ qIndex=0;sessionScore=0;
+ $("quiz").classList.remove("hidden");
+ $("quiz").scrollIntoView({behavior:"smooth",block:"start"});
+ showQuestion();
+}
+function showQuestion(){
+ $("feedback").textContent="";
+ $("next").classList.add("hidden");
+ const q=questions[qIndex];
+ $("question").textContent=`Pitanje ${qIndex+1}/${questions.length}: Šta znači “${q.en}”?`;
+ const wrong=current.words.filter(w=>w[1]!==q.bs).map(w=>w[1]);
+ const choices=[q.bs,...wrong.sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
+ $("answers").innerHTML=choices.map(c=>`<button class="answer" onclick="checkAnswer(this,${JSON.stringify(c)},${JSON.stringify(q.bs)})">${c}</button>`).join("");
+}
+function checkAnswer(btn,choice,correct){
+ const buttons=[...$("answers").querySelectorAll("button")];
+ buttons.forEach(b=>b.disabled=true);
+ if(choice===correct){
+   btn.style.background="#d9fbe5";btn.style.borderColor="#36a269";
+   $("feedback").textContent="Tačno! Bravo! 🌟";
+   sessionScore++;points+=10;
+ }else{
+   btn.style.background="#ffe3e3";btn.style.borderColor="#db6464";
+   $("feedback").textContent="Nije baš! Tačan odgovor je: "+correct;
+   buttons.forEach(b=>{if(b.textContent===correct)b.style.background="#d9fbe5"});
+ }
+ localStorage.setItem("engPoints",points);
+ $("points").textContent=points+" ⭐";
+ $("next").textContent=qIndex===questions.length-1?"Završi lekciju 🏆":"Sljedeće pitanje ➜";
+ $("next").classList.remove("hidden");
+}
+function nextQuestion(){
+ if(qIndex<questions.length-1){qIndex++;showQuestion();return}
+ if(!completed.includes(current.id)){
+   completed.push(current.id);
+   localStorage.setItem("engDone",JSON.stringify(completed));
+ }
+ $("question").textContent="🎉 Bravo! Završio/la si lekciju!";
+ $("answers").innerHTML="";
+ $("feedback").textContent=`Tačnih odgovora: ${sessionScore} od ${questions.length}. Osvojio/la si ${sessionScore*10} bodova u ovom kvizu!`;
+ $("next").classList.add("hidden");
+ render();
+}
+function showLessons(){
+ $("study").classList.add("hidden");$("quiz").classList.add("hidden");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+render();
+</script>
 </body>
 </html>
