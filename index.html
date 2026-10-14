@@ -469,30 +469,42 @@ function showQuestion() {
   }
 }
 
+
+
+  saveProgress();
+  showNextButton();
+}
+
 function checkAnswer(button, choice, correct) {
   if (waiting) return;
   waiting = true;
 
-  const buttons = [...document.querySelectorAll("#answers button")];
-  buttons.forEach(item => item.disabled = true);
+  const buttons = document.querySelectorAll("#answers button");
+
+  buttons.forEach(function(item) {
+    item.disabled = true;
+  });
 
   if (choice === correct) {
-    button.style.background = "#d9fbe5";
+    button.style.backgroundColor = "#d9fbe5";
     button.style.borderColor = "#36a269";
+
     $("feedback").textContent = "✅ Tačno! Bravo! +10 bodova 🌟";
     $("feedback").style.color = "#168044";
+
     sessionScore++;
     points += 10;
   } else {
-    button.style.background = "#ffe3e3";
+    button.style.backgroundColor = "#ffe3e3";
     button.style.borderColor = "#db6464";
+
     $("feedback").textContent =
       "❌ Nije tačno! Tačan odgovor je: " + correct + " 💪";
     $("feedback").style.color = "#c03939";
 
-    buttons.forEach(item => {
+    buttons.forEach(function(item) {
       if (item.textContent.trim() === correct) {
-        item.style.background = "#d9fbe5";
+        item.style.backgroundColor = "#d9fbe5";
         item.style.borderColor = "#36a269";
       }
     });
