@@ -186,30 +186,48 @@ $("typedAnswer").focus();
 }
 }
 
-function checkAnswer(btn,choice,correct){
-if(waiting)return;
-waiting=true;
-const buttons=[...$("answers").querySelectorAll("button")];
-buttons.forEach(b=>b.disabled=true);
 
-if(choice===correct){
-btn.style.background="#d9fbe5";
-btn.style.borderColor="#36a269";
-$("feedback").textContent="✅ Tačno! Bravo! +10 bodova 🌟";
-$("feedback").style.color="#168044";
-sessionScore++;points+=10;
-}else{
-btn.style.background="#ffe3e3";
-btn.style.borderColor="#db6464";
-$("feedback").textContent="❌ Nije tačno! Tačan odgovor je: "+correct+" 💪";
-$("feedback").style.color="#c03939";
-buttons.forEach(b=>{
-if(b.textContent.trim()===correct){
-b.style.background="#d9fbe5";
-b.style.borderColor="#36a269";
+function checkAnswer(btn, choice, correct) {
+  if (waiting) return;
+  waiting = true;
+
+  const buttons = [...document.querySelectorAll("#answers button")];
+  buttons.forEach(b => b.disabled = true);
+
+  if (choice === correct) {
+    btn.style.background = "#d9fbe5";
+    btn.style.borderColor = "#36a269";
+    document.getElementById("feedback").textContent =
+      "✅ Tačno! Bravo! +10 bodova 🌟";
+    document.getElementById("feedback").style.color = "#168044";
+    sessionScore++;
+    points += 10;
+  } else {
+    btn.style.background = "#ffe3e3";
+    btn.style.borderColor = "#db6464";
+    document.getElementById("feedback").textContent =
+      "❌ Nije tačno! Tačan odgovor je: " + correct + " 💪";
+    document.getElementById("feedback").style.color = "#c03939";
+
+    buttons.forEach(b => {
+      if (b.textContent.trim() === correct) {
+        b.style.background = "#d9fbe5";
+        b.style.borderColor = "#36a269";
+      }
+    });
+  }
+
+  localStorage.setItem("engPoints", String(points));
+  document.getElementById("points").textContent = points + " ⭐";
+
+  const next = document.getElementById("next");
+  next.textContent =
+    qIndex === questions.length - 1
+      ? "Završi lekciju 🏆"
+      : "Sljedeće pitanje ➜";
+  next.classList.remove("hidden");
 }
-});
-}
+
 saveProgress();
 showNextButton();
 }
