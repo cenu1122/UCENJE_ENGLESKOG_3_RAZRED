@@ -74,16 +74,34 @@ footer{text-align:center;color:#6b7190;padding:25px}
 <footer>💛 Mali koraci, velike riječi! Keep learning!</footer>
 
 <script>
+
 const lessons=[
- {id:"greetings",name:"Pozdravi",emoji:"👋",intro:"Pozdravi prijatelje na engleskom.",words:[["Hello","Zdravo"],["Good morning","Dobro jutro"],["Goodbye","Doviđenja"],["Thank you","Hvala"],["Please","Molim"]]},
- {id:"animals",name:"Životinje",emoji:"🐶",intro:"Upoznaj životinje na engleskom.",words:[["Cat","Mačka"],["Dog","Pas"],["Bird","Ptica"],["Fish","Riba"],["Rabbit","Zec"]]},
- {id:"colors",name:"Boje",emoji:"🎨",intro:"Koje su tvoje omiljene boje?",words:[["Red","Crvena"],["Blue","Plava"],["Green","Zelena"],["Yellow","Žuta"],["Purple","Ljubičasta"]]},
- {id:"numbers",name:"Brojevi",emoji:"🔢",intro:"Nauči brojati na engleskom.",words:[["One","Jedan"],["Two","Dva"],["Three","Tri"],["Four","Četiri"],["Five","Pet"]]},
- {id:"food",name:"Hrana",emoji:"🍎",intro:"Ukusne riječi za svaki dan!",words:[["Apple","Jabuka"],["Bread","Hljeb"],["Milk","Mlijeko"],["Water","Voda"],["Banana","Banana"]]},
- {id:"school",name:"Škola",emoji:"🎒",intro:"Riječi koje koristimo u školi.",words:[["Book","Knjiga"],["Pencil","Olovka"],["School","Škola"],["Teacher","Učitelj/učiteljica"],["Friend","Prijatelj"]]},
- {id:"family",name:"Porodica",emoji:"👨‍👩‍👧",intro:"Predstavi svoju porodicu.",words:[["Mother","Majka"],["Father","Otac"],["Sister","Sestra"],["Brother","Brat"],["Family","Porodica"]]},
- {id:"body",name:"Dijelovi tijela",emoji:"🧒",intro:"Nauči imenovati dijelove tijela.",words:[["Head","Glava"],["Eyes","Oči"],["Nose","Nos"],["Hands","Ruke"],["Feet","Stopala"]]}
+ {id:"greetings",name:"Pozdravi",emoji:"👋",intro:"Pozdravi prijatelje na engleskom.",words:[
+ ["Hello","Zdravo"],["Good morning","Dobro jutro"],["Goodbye","Doviđenja"],["Thank you","Hvala"],["Please","Molim"],["Good night","Laku noć"],["Good afternoon","Dobar dan"],["You're welcome","Nema na čemu"],["How are you?","Kako si?"],["I'm fine","Dobro sam"]
+ ]},
+ {id:"animals",name:"Životinje",emoji:"🐶",intro:"Upoznaj životinje na engleskom.",words:[
+ ["Cat","Mačka"],["Dog","Pas"],["Bird","Ptica"],["Fish","Riba"],["Rabbit","Zec"],["Horse","Konj"],["Cow","Krava"],["Duck","Patka"],["Lion","Lav"],["Elephant","Slon"]
+ ]},
+ {id:"colors",name:"Boje",emoji:"🎨",intro:"Nauči nazive boja.",words:[
+ ["Red","Crvena"],["Blue","Plava"],["Green","Zelena"],["Yellow","Žuta"],["Purple","Ljubičasta"],["Orange","Narandžasta"],["Pink","Roza"],["Black","Crna"],["White","Bijela"],["Brown","Smeđa"]
+ ]},
+ {id:"numbers",name:"Brojevi",emoji:"🔢",intro:"Nauči brojati na engleskom.",words:[
+ ["One","Jedan"],["Two","Dva"],["Three","Tri"],["Four","Četiri"],["Five","Pet"],["Six","Šest"],["Seven","Sedam"],["Eight","Osam"],["Nine","Devet"],["Ten","Deset"]
+ ]},
+ {id:"food",name:"Hrana",emoji:"🍎",intro:"Nauči riječi za hranu i piće.",words:[
+ ["Apple","Jabuka"],["Bread","Hljeb"],["Milk","Mlijeko"],["Water","Voda"],["Banana","Banana"],["Cheese","Sir"],["Egg","Jaje"],["Rice","Riža"],["Orange","Narandža"],["Juice","Sok"]
+ ]},
+ {id:"school",name:"Škola",emoji:"🎒",intro:"Nauči riječi koje koristimo u školi.",words:[
+ ["Book","Knjiga"],["Pencil","Olovka"],["School","Škola"],["Teacher","Učitelj/učiteljica"],["Friend","Prijatelj"],["Pen","Hemijska olovka"],["Bag","Torba"],["Desk","Školska klupa"],["Chair","Stolica"],["Notebook","Sveska"]
+ ]},
+ {id:"family",name:"Porodica",emoji:"👨‍👩‍👧",intro:"Upoznaj članove porodice.",words:[
+ ["Mother","Majka"],["Father","Otac"],["Sister","Sestra"],["Brother","Brat"],["Family","Porodica"],["Grandmother","Baka"],["Grandfather","Djed"],["Baby","Beba"],["Aunt","Tetka"],["Uncle","Ujak/stric"]
+ ]},
+ {id:"body",name:"Dijelovi tijela",emoji:"🧒",intro:"Nauči imenovati dijelove tijela.",words:[
+ ["Head","Glava"],["Eyes","Oči"],["Nose","Nos"],["Hands","Ruke"],["Feet","Stopala"],["Mouth","Usta"],["Ears","Uši"],["Hair","Kosa"],["Arms","Ruke"],["Legs","Noge"]
+ ]}
 ];
+
 let current=null,questions=[],qIndex=0,sessionScore=0;
 let points=Number(localStorage.getItem("engPoints")||0);
 let completed=JSON.parse(localStorage.getItem("engDone")||"[]");
