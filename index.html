@@ -1,124 +1,238 @@
 <!DOCTYPE html>
+<html lang="bs">
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engleski za 3. razred | DocBizHub Kids</title>
 
-    <title>LibTIFF Project &#8212; LibTIFF 4.7.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3b5d5a7b"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="LibTIFF License" href="license.html" />
-    <link rel="prev" title="RFC 2: Restoring Needed LibTIFF Tools" href="../rfcs/rfc2_restoring_needed_tools.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="license.html" title="LibTIFF License"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../rfcs/rfc2_restoring_needed_tools.html" title="RFC 2: Restoring Needed LibTIFF Tools"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.1 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">LibTIFF Project</a></li> 
-      </ul>
-    </div>  
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0fdf4;
+            color: #1f2937;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #ffffff;
+            border-bottom: 2px solid #bbf7d0;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #15803d;
+            text-decoration: none;
+        }
+
+        .btn-nav {
+            background: #16a34a;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: #15803d;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: #ffffff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 30px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid #22c55e;
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+
+        .grid-vokabular {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .vocab-box {
+            background: #f7fee7;
+            border: 2px solid #bef264;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .vocab-box .en {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3f6212;
+        }
+
+        .vocab-box .bs {
+            font-size: 0.95rem;
+            color: #4d7c0f;
+            margin-top: 5px;
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border: 2px solid #bbf7d0;
+            border-radius: 10px;
+            background: #f7fee7;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: #dcfce7;
+            border-color: #16a34a;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        footer {
+            background-color: #14532d;
+            color: #bbf7d0;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="#" class="logo">🌱 DocBizHub - Engleski za 3. razred</a>
+        <a href="DASHBOARD.html" class="btn-nav">⬅ Nazad</a>
+    </header>
+
+    <section class="hero">
+        <h1>Let's Learn English! 🎈</h1>
+        <p>Zabavno učenje engleskog jezika kroz riječi, boje i igru za treći razred.</p>
+    </section>
+
+    <main class="main-container">
+        
+        <!-- Vokabular -->
+        <div class="card">
+            <h2>📚 Lekcija: Životinje i boje (Animals & Colors)</h2>
+            <p>Upoznaj nove riječi i pokušaj ih zapamtiti:</p>
             
-  <section id="libtiff-project">
-<h1>LibTIFF Project<a class="headerlink" href="#libtiff-project" title="Permalink to this heading">¶</a></h1>
-<p>The LibTIFF project provides free software maintained by a small community of software developers.  See
-<a class="reference internal" href="acknowledgements.html"><span class="doc">Acknowledgments</span></a> for further details.</p>
-<p>Questions should be sent to the <a class="reference internal" href="mailinglist.html"><span class="doc">Mailing List</span></a>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Please do not email the maintainers personally, especially when asking
-questions such as &quot;when is the next release?&quot;.  Please use the public mailing lists.
-While the maintainers and contributors to LibTIFF are primarily professional software
-developers, none of us are paid to work on LibTIFF directly, and almost all the
-activity is voluntary and unpaid.</p>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="license.html">LibTIFF License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mailinglist.html">Mailing List</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bugs.html">Reporting Bugs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="psc.html">Project Steering Committee</a></li>
-<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgments</a></li>
-</ul>
-</div>
-</section>
-
-
-            <div class="clearer"></div>
-          </div>
+            <div class="grid-vokabular">
+                <div class="vocab-box">
+                    <div class="en">Cat 🐱</div>
+                    <div class="bs">Mačka</div>
+                </div>
+                <div class="vocab-box">
+                    <div class="en">Dog 🐶</div>
+                    <div class="bs">Pas</div>
+                </div>
+                <div class="vocab-box">
+                    <div class="en">Red 🔴</div>
+                    <div class="bs">Crvena</div>
+                </div>
+                <div class="vocab-box">
+                    <div class="en">Blue 🔵</div>
+                    <div class="bs">Plava</div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <div>
-    <h4>Previous topic</h4>
-    <p class="topless"><a href="../rfcs/rfc2_restoring_needed_tools.html"
-                          title="previous chapter">RFC 2: Restoring Needed LibTIFF Tools</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="license.html"
-                          title="next chapter">LibTIFF License</a></p>
-  </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/project/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+
+        <!-- Mini Kviz -->
+        <div class="card">
+            <h2>🎮 Mini Kviz Provjera Znanja</h2>
+            <p id="questionText" style="margin-bottom: 15px; font-weight: bold;">Kako se na engleskom kaže "Pas"?</p>
+            
+            <button class="quiz-option" onclick="provjeriOdgovor(false)">A) Cat</button>
+            <button class="quiz-option" onclick="provjeriOdgovor(true)">B) Dog</button>
+            <button class="quiz-option" onclick="provjeriOdgovor(false)">C) Red</button>
+
+            <div id="feedbackMessage" class="feedback"></div>
         </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="license.html" title="LibTIFF License"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../rfcs/rfc2_restoring_needed_tools.html" title="RFC 2: Restoring Needed LibTIFF Tools"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.1 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">LibTIFF Project</a></li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2025, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
-    </div>
-  </body>
+
+    </main>
+
+    <footer>
+        <p>© <span id="currentYear"></span> DocBizHub. Sva prava zadržana.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        function provjeriOdgovor(isTacan) {
+            const feedback = document.getElementById('feedbackMessage');
+            if (isTacan) {
+                feedback.style.color = "#16a34a";
+                feedback.textContent = "Bravo! Odgovor je tačan! 🌟";
+            } else {
+                feedback.style.color = "#dc2626";
+                feedback.textContent = "Netačno, pokušaj ponovo! 💪";
+            }
+        }
+    </script>
+
+</body>
 </html>
