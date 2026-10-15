@@ -4,230 +4,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Engleski kroz igru!</title>
-
 <style>
-:root {
-  --blue: #315bea;
-  --ink: #202747;
-  --bg: #f4f6ff;
-}
+:root { --blue: #315bea; --ink: #202747; --bg: #f4f6ff; }
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  font-family: Arial, sans-serif;
-  color: var(--ink);
-}
-header {
-  background: linear-gradient(120deg,#315bea,#8b5ce8);
-  color: white;
-  padding: 28px 16px;
-  text-align: center;
-}
+body { margin: 0; background: var(--bg); font-family: Arial, sans-serif; color: var(--ink); }
+header { background: linear-gradient(120deg,#315bea,#8b5ce8); color: white; padding: 28px 16px; text-align: center; }
 header h1 { margin: 0 0 10px; font-size: clamp(26px,5vw,42px); }
 main { max-width: 1000px; margin: auto; padding: 18px; }
 .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.stat {
-  flex: 1;
-  min-width: 130px;
-  background: white;
-  border-radius: 16px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 3px 12px #26346a12;
-}
-.stat strong {
-  display: block;
-  font-size: 20px;
-  color: var(--blue);
-  margin-bottom: 5px;
-}
-.lessons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(145px,1fr));
-  gap: 12px;
-}
-.lesson {
-  border: 0;
-  background: white;
-  border-radius: 18px;
-  padding: 20px 10px;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 3px 12px #26346a12;
-  color: var(--ink);
-  font-size: 16px;
-}
+.stat { flex: 1; min-width: 130px; background: white; border-radius: 16px; padding: 15px; text-align: center; box-shadow: 0 3px 12px #26346a12; }
+.stat strong { display: block; font-size: 20px; color: var(--blue); margin-bottom: 5px; }
+.lessons { display: grid; grid-template-columns: repeat(auto-fit,minmax(145px,1fr)); gap: 12px; }
+.lesson { border: 0; background: white; border-radius: 18px; padding: 20px 10px; text-align: center; cursor: pointer; box-shadow: 0 3px 12px #26346a12; color: var(--ink); font-size: 16px; }
 .lesson:hover { transform: translateY(-2px); }
 .emoji { display: block; font-size: 34px; margin-bottom: 10px; }
-.panel {
-  background: white;
-  border-radius: 20px;
-  padding: 22px;
-  margin-top: 20px;
-  box-shadow: 0 3px 15px #26346a12;
-}
+.panel { background: white; border-radius: 20px; padding: 22px; margin-top: 20px; box-shadow: 0 3px 15px #26346a12; }
 .hidden { display: none !important; }
-.word {
-  background: #f0f3ff;
-  border-radius: 16px;
-  padding: 16px;
-  margin: 12px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
+.word { background: #f0f3ff; border-radius: 16px; padding: 16px; margin: 12px 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .word b { font-size: 21px; }
 button, input { font: inherit; }
 button { touch-action: manipulation; }
-.action {
-  background: var(--blue);
-  color: white;
-  border: 0;
-  border-radius: 12px;
-  padding: 13px 16px;
-  cursor: pointer;
-  font-weight: bold;
-  margin: 4px 3px 4px 0;
-}
-.action:disabled { opacity: .5; }
-.sound {
-  border: 0;
-  background: #e6ebff;
-  border-radius: 12px;
-  padding: 11px 13px;
-  cursor: pointer;
-}
+.action { background: var(--blue); color: white; border: 0; border-radius: 12px; padding: 13px 16px; cursor: pointer; font-weight: bold; margin: 4px 3px 4px 0; text-decoration: none; display: inline-block; text-align: center; }
+.sound { border: 0; background: #e6ebff; border-radius: 12px; padding: 11px 13px; cursor: pointer; }
+.extra-modes { display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
 #question { font-size: 22px; font-weight: bold; margin: 18px 0; }
 .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.answer {
-  padding: 15px;
-  border: 2px solid #e0e5fa;
-  border-radius: 12px;
-  background: white;
-  cursor: pointer;
-  font-size: 16px;
-}
+.answer { padding: 15px; border: 2px solid #e0e5fa; border-radius: 12px; background: white; cursor: pointer; font-size: 16px; }
 .answer:disabled { cursor: default; }
 #feedback { font-weight: bold; min-height: 28px; margin: 15px 0; line-height: 1.5; }
-#typingWord {
-  font-size: 30px;
-  font-weight: bold;
-  text-align: center;
-  background: #f0f3ff;
-  border-radius: 16px;
-  padding: 22px;
-  margin: 15px 0;
-}
-#typedAnswer {
-  width: 100%;
-  padding: 14px;
-  border: 2px solid #dce2f7;
-  border-radius: 12px;
-  margin: 10px 0;
-  font-size: 18px;
-}
-#errorBox {
-  color: #a52222;
-  background: #ffe8e8;
-  padding: 14px;
-  border-radius: 12px;
-  margin: 15px 0;
-  overflow-wrap: anywhere;
-}
-.badge-container {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin: 15px 0;
-  flex-wrap: wrap;
-}
-.badge {
-  background: #eef2ff;
-  border: 2px solid #d0d9ff;
-  border-radius: 12px;
-  padding: 10px 15px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 14px;
-  color: #7b85aa;
-}
-.badge.unlocked {
-  background: #fff8e6;
-  border-color: #f1c40f;
-  color: #b7950b;
-}
-.extra-modes {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-  flex-wrap: wrap;
-}
-.match-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin: 20px 0;
-}
-.match-item {
-  background: #f0f3ff;
-  border: 2px solid #d0d9ff;
-  padding: 15px;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 24px;
-  cursor: pointer;
-  font-weight: bold;
-}
-.match-item.selected {
-  background: #d9fbe5;
-  border-color: #36a269;
-}
+#typingWord { font-size: 30px; font-weight: bold; text-align: center; background: #f0f3ff; border-radius: 16px; padding: 22px; margin: 15px 0; }
+#typedAnswer { width: 100%; padding: 14px; border: 2px solid #dce2f7; border-radius: 12px; margin: 10px 0; font-size: 18px; }
 footer { text-align: center; color: #6b7190; padding: 25px; }
-@media(max-width:450px) {
-  main { padding: 12px; }
-  .panel { padding: 16px; }
-  .answers { grid-template-columns: 1fr; }
-  .match-grid { grid-template-columns: 1fr; }
-  .word b { font-size: 18px; }
-  .stats { gap: 8px; }
-}
+@media(max-width:450px) { main { padding: 12px; } .answers { grid-template-columns: 1fr; } }
 </style>
 </head>
-
 <body>
 <header>
   <h1>🌟 Engleski kroz igru!</h1>
   <p>Learn English with fun — Uči engleski kroz zabavu!</p>
 </header>
-
 <main>
-  <div id="errorBox" class="hidden"></div>
-
   <div class="stats">
-    <div class="stat">
-      <strong id="points">0 ⭐</strong>
-      Bodovi
-    </div>
-    <div class="stat">
-      <strong id="done">0 / 14</strong>
-      Završene lekcije
-    </div>
-    <div class="stat">
-      <strong id="streak">🔥 0 dana</strong>
-      Niz učenja
-    </div>
-    <div class="stat">
-      <strong id="badgeLevel">🥉 Brončani</strong>
-      Nivo
-    </div>
+    <div class="stat"><strong id="points">0 ⭐</strong>Bodovi</div>
+    <div class="stat"><strong id="done">0 / 14</strong>Završene lekcije</div>
+    <div class="stat"><strong id="streak">🔥 0 dana</strong>Niz učenja</div>
+    <div class="stat"><strong id="badgeLevel">🥉 Brončani</strong>Nivo</div>
   </div>
 
+  <!-- Dugmad koja vode na druge stranice -->
   <div class="extra-modes">
-    <button class="action" id="openDaily">🎯 Dnevni izazov</button>
-    <button class="action" id="openMatching">🧩 Igra spajanja</button>
-    <button class="action" id="openParents" style="background:#8b5ce8;">👨‍👩‍👧 Pregled za roditelje</button>
+    <a href="dnevni_izazov.html" class="action">🎯 Dnevni izazov</a>
+    <a href="spajanje.html" class="action">🧩 Igra spajanja</a>
+    <a href="roditelji.html" class="action" style="background:#8b5ce8;">👨‍👩‍👧 Pregled za roditelje</a>
   </div>
 
   <h2>📚 Izaberi lekciju</h2>
@@ -247,768 +75,101 @@ footer { text-align: center; color: #6b7190; padding: 25px; }
     <h2>🧠 Vrijeme za kviz!</h2>
     <div id="question"></div>
     <div class="answers" id="answers"></div>
-
     <div id="typingArea" class="hidden">
       <div id="typingWord"></div>
-      <label for="typedAnswer">
-        <b>✍️ Napiši riječ na engleskom:</b>
-      </label>
-      <input id="typedAnswer" type="text"
-        placeholder="Upiši riječ na engleskom..."
-        autocomplete="off">
+      <label for="typedAnswer"><b>✍️ Napiši riječ na engleskom:</b></label>
+      <input id="typedAnswer" type="text" placeholder="Upiši riječ na engleskom..." autocomplete="off">
       <button class="action" id="checkTyped">Provjeri odgovor ✓</button>
     </div>
-
     <div id="feedback" aria-live="polite"></div>
     <button class="action hidden" id="next">Sljedeće ➜</button>
     <button class="sound" id="backFromQuiz">← Sve lekcije</button>
   </section>
-
-  <!-- Dnevni izazov panel -->
-  <section class="panel hidden" id="dailyPanel">
-    <h2>🎯 Dnevni izazov</h2>
-    <p>Riješi 5 brzih pitanja dana i osvoji ekstra bodove!</p>
-    <div id="dailyContent"></div>
-    <button class="sound" id="backFromDaily" style="margin-top:15px;">← Nazad</button>
-  </section>
-
-  <!-- Igra spajanja panel -->
-  <section class="panel hidden" id="matchPanel">
-    <h2>🧩 Spoji slike i riječi</h2>
-    <p>Klikni na sliku/emoji, pa na odgovarajuću englesku riječ!</p>
-    <div id="matchFeedback" style="font-weight:bold; margin-bottom:10px; min-height:24px;"></div>
-    <div class="match-grid" id="matchGrid"></div>
-    <button class="action hidden" id="nextMatch" style="margin-top:15px;">Nova igra spajanja 🔄</button>
-    <button class="sound" id="backFromMatch" style="margin-top:15px;">← Nazad</button>
-  </section>
-
-  <!-- Roditeljski pregled panel -->
-  <section class="panel hidden" id="parentsPanel">
-    <h2>👨‍👩‍👧 Pregled za roditelje</h2>
-    <p>Uvid u napredak, osvojene nagrade i riječi koje bi trebalo ponoviti:</p>
-    
-    <div class="badge-container">
-      <div class="badge" id="bBronze">🥉 Brončana značka (100 bodova)</div>
-      <div class="badge" id="bSilver">🥈 Srebrna značka (300 bodova)</div>
-      <div class="badge" id="bGold">🥇 Zlatna značka (600 bodova)</div>
-    </div>
-
-    <div style="background:#f9fafb; padding:15px; border-radius:12px; margin-top:15px;">
-      <p><b>📊 Statistika:</b></p>
-      <ul>
-        <li>Ukupno osvojenih bodova: <span id="pPoints">0</span> ⭐</li>
-        <li>Završeno lekcija: <span id="pCompleted">0</span> / 14</li>
-        <li>Niz učenja (Streak): <span id="pStreak">0</span> dana</li>
-      </ul>
-      <p><b>📝 Riječi za ponavljanje (greške):</b></p>
-      <div id="pErrors" style="color:#a52222; font-style:italic;">Nema zabilježenih grešaka. Bravo!</div>
-    </div>
-
-    <button class="action" id="resetData" style="background:#a52222; margin-top:15px;">Resetuj napredak</button>
-    <br><br>
-    <button class="sound" id="backFromParents">← Nazad</button>
-  </section>
 </main>
-
 <footer>💛 Mali koraci, velike riječi! Keep learning!</footer>
 
 <script>
-"use strict";
-
 const lessons = [
-{
- id:"greetings", name:"Pozdravi", emoji:"👋",
- intro:"Pozdravi prijatelje na engleskom.",
- words:[
-  ["Hello","Zdravo"],["Good morning","Dobro jutro"],
-  ["Goodbye","Doviđenja"],["Thank you","Hvala"],
-  ["Please","Molim"],["Good night","Laku noć"],
-  ["Good afternoon","Dobar dan"],
-  ["You're welcome","Nema na čemu"],
-  ["How are you?","Kako si?"],["I'm fine","Dobro sam"]
- ]
-},
-{
- id:"animals", name:"Životinje", emoji:"🐶",
- intro:"Upoznaj životinje na engleskom.",
- words:[
-  ["Cat","Mačka"],["Dog","Pas"],["Bird","Ptica"],
-  ["Fish","Riba"],["Rabbit","Zec"],["Horse","Konj"],
-  ["Cow","Krava"],["Duck","Patka"],["Lion","Lav"],
-  ["Elephant","Slon"]
- ]
-},
-{
- id:"colors", name:"Boje", emoji:"🎨",
- intro:"Nauči nazive boja.",
- words:[
-  ["Red","Crvena"],["Blue","Plava"],["Green","Zelena"],
-  ["Yellow","Žuta"],["Purple","Ljubičasta"],
-  ["Orange","Narandžasta"],["Pink","Roza"],
-  ["Black","Crna"],["White","Bijela"],["Brown","Smeđa"]
- ]
-},
-{
- id:"numbers", name:"Brojevi", emoji:"🔢",
- intro:"Nauči brojati na engleskom.",
- words:[
-  ["One","Jedan"],["Two","Dva"],["Three","Tri"],
-  ["Four","Četiri"],["Five","Pet"],["Six","Šest"],
-  ["Seven","Sedam"],["Eight","Osam"],
-  ["Nine","Devet"],["Ten","Deset"]
- ]
-},
-{
- id:"food", name:"Hrana", emoji:"🍎",
- intro:"Nauči riječi za hranu i piće.",
- words:[
-  ["Apple","Jabuka"],["Bread","Hljeb"],["Milk","Mlijeko"],
-  ["Water","Voda"],["Banana","Banana"],["Cheese","Sir"],
-  ["Egg","Jaje"],["Rice","Riža"],
-  ["Orange","Narandža"],["Juice","Sok"]
- ]
-},
-{
- id:"school", name:"Škola", emoji:"🎒",
- intro:"Nauči riječi koje koristimo u školi.",
- words:[
-  ["Book","Knjiga"],["Pencil","Olovka"],["School","Škola"],
-  ["Teacher","Učitelj/učiteljica"],["Friend","Prijatelj"],
-  ["Pen","Hemijska olovka"],["Bag","Torba"],
-  ["Desk","Školska klupa"],["Chair","Stolica"],
-  ["Notebook","Sveska"]
- ]
-},
-{
- id:"family", name:"Porodica", emoji:"👨‍👩‍👧",
- intro:"Upoznaj članove porodice.",
- words:[
-  ["Mother","Majka"],["Father","Otac"],["Sister","Sestra"],
-  ["Brother","Brat"],["Family","Porodica"],
-  ["Grandmother","Baka"],["Grandfather","Djed"],
-  ["Baby","Beba"],["Aunt","Tetka"],["Uncle","Ujak/stric"]
- ]
-},
-{
- id:"body", name:"Dijelovi tijela", emoji:"🧒",
- intro:"Nauči imenovati dijelove tijela.",
- words:[
-  ["Head","Glava"],["Eyes","Oči"],["Nose","Nos"],
-  ["Hands","Ruke"],["Feet","Stopala"],["Mouth","Usta"],
-  ["Ears","Uši"],["Hair","Kosa"],["Arms","Ruke"],
-  ["Legs","Noge"]
- ]
-},
-{
- id:"clothes", name:"Odjeća", emoji:"👕",
- intro:"Nauči nazive odjeće na engleskom.",
- words:[
-  ["Shirt","Majica"],["Pants","Hlače"],["Shoes","Cipele"],
-  ["Hat","Kapa"],["Coat","Kaput"],["Socks","Čarape"],
-  ["Dress","Haljina"],["Jacket","Jakna"],["Scarf","Šal"],
-  ["Gloves","Rukavice"]
- ]
-},
-{
- id:"weather", name:"Vrijeme", emoji:"☀️",
- intro:"Kako opisati kakvo je vrijeme?",
- words:[
-  ["Sun","Sunce"],["Rain","Kiša"],["Snow","Snijeg"],
-  ["Wind","Vjetar"],["Cloud","Oblak"],["Hot","Vruće"],
-  ["Cold","Hladno"],["Storm","Oluja"],
-  ["Sunny","Sunčano"],["Rainy","Kišovito"]
- ]
-},
-{
- id:"house", name:"Kuća", emoji:"🏠",
- intro:"Upoznaj prostorije i dijelove kuće.",
- words:[
-  ["House","Kuća"],["Door","Vrata"],["Window","Prozor"],
-  ["Room","Soba"],["Kitchen","Kuhinja"],
-  ["Bathroom","Kupatilo"],["Bed","Krevet"],
-  ["Table","Sto"],["Lamp","Lampa"],["Garden","Bašta"]
- ]
-},
-{
- id:"transport", name:"Prevoz", emoji:"🚗",
- intro:"Sredstva prevoza i putovanja.",
- words:[
-  ["Car","Auto"],["Bus","Autobus"],["Train","Voz"],
-  ["Plane","Avion"],["Bike","Bicikl"],["Ship","Brod"],
-  ["Taxi","Taksi"],["Truck","Kamion"],
-  ["Road","Cesta"],["Wheel","Točak"]
- ]
-},
-{
- id:"emotions", name:"Emocije", emoji:"😊",
- intro:"Kako se osjećaš danas?",
- words:[
-  ["Happy","Sretan/sretna"],["Sad","Tužan/tužna"],
-  ["Angry","Ljut/ljuta"],["Tired","Umoran/umorna"],
-  ["Scared","Uplašen/uplašena"],["Excited","Uzbuđen/uzbuđena"],
-  ["Hungry","Gladan/gladna"],["Thirsty","Žedan/žedna"],
-  ["Cold","Hladno mu/joj je"],["Hot","Vruće mu/joj je"]
- ]
-},
-{
- id:"sentences", name:"Kratke rečenice", emoji:"💬",
- intro:"Nauči korisne svakodnevne rečenice.",
- words:[
-  ["I like apples","Volim jabuke"],
-  ["My name is...","Moje ime je..."],
-  ["I am happy","Sretan/sretna sam"],
-  ["Look at the dog","Pogledaj psa"],
-  ["Give me water","Daj mi vode"],
-  ["Good morning friend","Dobro jutro prijatelju"],
-  ["Let's play","Hajde da se igramo"],
-  ["Open the book","Otvorite knjigu"],
-  ["Close the door","Zatvori vrata"],
-  ["I love you","Volim te"]
- ]
-}
+{ id:"greetings", name:"Pozdravi", emoji:"👋", intro:"Pozdravi prijatelje na engleskom.", words:[["Hello","Zdravo"],["Good morning","Dobro jutro"],["Goodbye","Doviđenja"],["Thank you","Hvala"],["Please","Molim"],["Good night","Laku noć"],["Good afternoon","Dobar dan"],["You're welcome","Nema na čemu"],["How are you?","Kako si?"],["I'm fine","Dobro sam"]] },
+{ id:"animals", name:"Životinje", emoji:"🐶", intro:"Upoznaj životinje na engleskom.", words:[["Cat","Mačka"],["Dog","Pas"],["Bird","Ptica"],["Fish","Riba"],["Rabbit","Zec"],["Horse","Konj"],["Cow","Krava"],["Duck","Patka"],["Lion","Lav"],["Elephant","Slon"]] },
+{ id:"colors", name:"Boje", emoji:"🎨", intro:"Nauči nazive boja.", words:[["Red","Crvena"],["Blue","Plava"],["Green","Zelena"],["Yellow","Žuta"],["Purple","Ljubičasta"],["Orange","Narandžasta"],["Pink","Roza"],["Black","Crna"],["White","Bijela"],["Brown","Smeđa"]] },
+{ id:"numbers", name:"Brojevi", emoji:"🔢", intro:"Nauči brojati na engleskom.", words:[["One","Jedan"],["Two","Dva"],["Three","Tri"],["Four","Četiri"],["Five","Pet"],["Six","Šest"],["Seven","Sedam"],["Eight","Osam"],["Nine","Devet"],["Ten","Deset"]] },
+{ id:"food", name:"Hrana", emoji:"🍎", intro:"Nauči riječi za hranu i piće.", words:[["Apple","Jabuka"],["Bread","Hljeb"],["Milk","Mlijeko"],["Water","Voda"],["Banana","Banana"],["Cheese","Sir"],["Egg","Jaje"],["Rice","Riža"],["Orange","Narandža"],["Juice","Sok"]] },
+{ id:"school", name:"Škola", emoji:"🎒", intro:"Nauči riječi koje koristimo u školi.", words:[["Book","Knjiga"],["Pencil","Olovka"],["School","Škola"],["Teacher","Učitelj/učiteljica"],["Friend","Prijatelj"],["Pen","Hemijska olovka"],["Bag","Torba"],["Desk","Školska klupa"],["Chair","Stolica"],["Notebook","Sveska"]] },
+{ id:"family", name:"Porodica", emoji:"👨‍👩‍👧", intro:"Upoznaj članove porodice.", words:[["Mother","Majka"],["Father","Otac"],["Sister","Sestra"],["Brother","Brat"],["Family","Porodica"],["Grandmother","Baka"],["Grandfather","Djed"],["Baby","Beba"],["Aunt","Tetka"],["Uncle","Ujak/stric"]] },
+{ id:"body", name:"Dijelovi tijela", emoji:"🧒", intro:"Nauči imenovati dijelove tijela.", words:[["Head","Glava"],["Eyes","Oči"],["Nose","Nos"],["Hands","Ruke"],["Feet","Stopala"],["Mouth","Usta"],["Ears","Uši"],["Hair","Kosa"],["Arms","Ruke"],["Legs","Noge"]] },
+{ id:"clothes", name:"Odjeća", emoji:"👕", intro:"Nauči nazive odjeće.", words:[["Shirt","Majica"],["Pants","Hlače"],["Shoes","Cipele"],["Hat","Kapa"],["Coat","Kaput"],["Socks","Čarape"],["Dress","Haljina"],["Jacket","Jakna"],["Scarf","Šal"],["Gloves","Rukavice"]] },
+{ id:"weather", name:"Vrijeme", emoji:"☀️", intro:"Kakvo je vrijeme?", words:[["Sun","Sunce"],["Rain","Kiša"],["Snow","Snijeg"],["Wind","Vjetar"],["Cloud","Oblak"],["Hot","Vruće"],["Cold","Hladno"],["Storm","Oluja"],["Sunny","Sunčano"],["Rainy","Kišovito"]] },
+{ id:"house", name:"Kuća", emoji:"🏠", intro:"Prostorije i dijelovi kuće.", words:[["House","Kuća"],["Door","Vrata"],["Window","Prozor"],["Room","Soba"],["Kitchen","Kuhinja"],["Bathroom","Kupatilo"],["Bed","Krevet"],["Table","Sto"],["Lamp","Lampa"],["Garden","Bašta"]] },
+{ id:"transport", name:"Prevoz", emoji:"🚗", intro:"Sredstva prevoza.", words:[["Car","Auto"],["Bus","Autobus"],["Train","Voz"],["Plane","Avion"],["Bike","Bicikl"],["Ship","Brod"],["Taxi","Taksi"],["Truck","Kamion"],["Road","Cesta"],["Wheel","Točak"]] },
+{ id:"emotions", name:"Emocije", emoji:"😊", intro:"Kako se osjećaš?", words:[["Happy","Sretan"],["Sad","Tužan"],["Angry","Ljut"],["Tired","Umoran"],["Scared","Uplašen"],["Excited","Uzbuđen"],["Hungry","Gladan"],["Thirsty","Žedan"],["Cold","Hladno mu je"],["Hot","Vruće mu je"]] },
+{ id:"sentences", name:"Kratke rečenice", emoji:"💬", intro:"Svakodnevne rečenice.", words:[["I like apples","Volim jabuke"],["My name is...","Moje ime je..."],["I am happy","Sretan sam"],["Look at the dog","Pogledaj psa"],["Give me water","Daj mi vode"],["Good morning friend","Dobro jutro prijatelju"],["Let's play","Hajde da se igramo"],["Open the book","Otvorite knjigu"],["Close the door","Zatvori vrata"],["I love you","Volim te"]] }
 ];
 
 const $ = id => document.getElementById(id);
-
-let current = null;
-let questions = [];
-let qIndex = 0;
-let sessionScore = 0;
-let waiting = false;
-let points = 0;
-let completed = [];
-let streak = 0;
-let lastActiveDate = "";
-let errorsList = [];
+let current = null, questions = [], qIndex = 0, sessionScore = 0, waiting = false, points = 0, completed = [];
 
 function loadProgress() {
   try {
     points = Number(localStorage.getItem("engPoints") || 0);
-    if (!Number.isFinite(points) || points < 0) points = 0;
     completed = JSON.parse(localStorage.getItem("engDone") || "[]");
-    if (!Array.isArray(completed)) completed = [];
-    errorsList = JSON.parse(localStorage.getItem("engErrors") || "[]");
-    if (!Array.isArray(errorsList)) errorsList = [];
-
-    const today = new Date().toDateString();
-    lastActiveDate = localStorage.getItem("engLastDate") || "";
-    streak = Number(localStorage.getItem("engStreak") || 0);
-
-    if (lastActiveDate !== today) {
-      const yesterday = new Date(Date.now() - 86400000).toDateString();
-      if (lastActiveDate === yesterday) {
-        streak++;
-      } else {
-        streak = 1;
-      }
+    let streak = Number(localStorage.getItem("engStreak") || 0);
+    let today = new Date().toDateString();
+    if (localStorage.getItem("engLastDate") !== today) {
+      streak = streak ? streak + 1 : 1;
       localStorage.setItem("engLastDate", today);
       localStorage.setItem("engStreak", String(streak));
     }
-  } catch (error) {
-    points = 0;
-    completed = [];
-    streak = 1;
-    errorsList = [];
-  }
+    $("streak").textContent = "🔥 " + streak + " dana";
+  } catch(e) {}
 }
 
 function saveProgress() {
   try {
     localStorage.setItem("engPoints", String(points));
     localStorage.setItem("engDone", JSON.stringify(completed));
-    localStorage.setItem("engErrors", JSON.stringify(errorsList));
-  } catch (error) {}
+  } catch(e) {}
   updateDisplay();
 }
 
 function updateDisplay() {
   $("points").textContent = points + " ⭐";
   $("done").textContent = completed.length + " / " + lessons.length;
-  $("streak").textContent = "🔥 " + streak + " dana";
-
-  let levelName = "🥉 Brončani";
-  if (points >= 600) levelName = "🥇 Zlatni";
-  else if (points >= 300) levelName = "🥈 Srebrni";
-  $("badgeLevel").textContent = levelName;
+  let lvl = "🥉 Brončani";
+  if (points >= 600) lvl = "🥇 Zlatni";
+  else if (points >= 300) lvl = "🥈 Srebrni";
+  $("badgeLevel").textContent = lvl;
 }
 
-function shuffle(array) {
-  const copy = [...array];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+function shuffle(arr) {
+  let c = [...arr];
+  for (let i = c.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [c[i], c[j]] = [c[j], c[i]];
   }
-  return copy;
-}
-
-function normalize(value) {
-  return String(value)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[’']/g, "")
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  return c;
 }
 
 function render() {
   updateDisplay();
-
-  $("lessons").innerHTML = lessons.map(lesson => `
-    <button class="lesson" data-lesson="${lesson.id}">
-      <span class="emoji">${lesson.emoji}</span>
-      <b>${lesson.name}</b>
-      <div style="margin-top:8px;color:#69718d;font-size:13px">
-        ${completed.includes(lesson.id) ? "✅ Završeno" : "10 riječi"}
-      </div>
+  $("lessons").innerHTML = lessons.map(l => `
+    <button class="lesson" data-lesson="${l.id}">
+      <span class="emoji">${l.emoji}</span>
+      <b>${l.name}</b>
+      <div style="margin-top:8px;color:#69718d;font-size:13px">${completed.includes(l.id) ? "✅ Završeno" : "10 riječi"}</div>
     </button>
   `).join("");
-
-  document.querySelectorAll("[data-lesson]").forEach(button => {
-    button.addEventListener("click", () => openLesson(button.dataset.lesson));
+  document.querySelectorAll("[data-lesson]").forEach(b => {
+    b.addEventListener("click", () => openLesson(b.dataset.lesson));
   });
 }
 
 function openLesson(id) {
-  current = lessons.find(lesson => lesson.id === id);
+  current = lessons.find(l => l.id === id);
   if (!current) return;
-
   $("lessonTitle").textContent = current.emoji + " " + current.name;
   $("lessonIntro").textContent = current.intro;
-
-  $("words").innerHTML = current.words.map((word, index) => `
+  $("words").innerHTML = current.words.map((w, i) => `
     <div class="word">
-      <div><b>${word[0]}</b><br><span>${word[1]}</span></div>
-      <button class="sound" data-word="${index}">🔊 Slušaj</button>
-    </div>
-  `).join("");
-
-  $("words").querySelectorAll("[data-word]").forEach(button => {
-    button.addEventListener("click", () => {
-      speak(current.words[Number(button.dataset.word)][0]);
-    });
-  });
-
-  hideAllPanels();
-  $("study").classList.remove("hidden");
-  $("study").scrollIntoView({ behavior:"smooth", block:"start" });
-}
-
-function speak(word) {
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const voice = new SpeechSynthesisUtterance(word);
-  voice.lang = "en-GB";
-  voice.rate = 0.8;
-  window.speechSynthesis.speak(voice);
-}
-
-function startQuiz() {
-  if (!current) return;
-
-  questions = shuffle(current.words).map(word => ({
-    en: word[0], bs: word[1], typing: false
-  })).concat(shuffle(current.words).map(word => ({
-    en: word[0], bs: word[1], typing: true
-  })));
-
-  qIndex = 0;
-  sessionScore = 0;
-  waiting = false;
-
-  hideAllPanels();
-  $("quiz").classList.remove("hidden");
-  $("quiz").scrollIntoView({ behavior:"smooth", block:"start" });
-
-  showQuestion();
-}
-
-function showQuestion() {
-  waiting = false;
-
-  $("feedback").textContent = "";
-  $("feedback").style.color = "";
-  $("next").classList.add("hidden");
-  $("typedAnswer").value = "";
-  $("typedAnswer").disabled = false;
-  $("checkTyped").disabled = false;
-
-  const question = questions[qIndex];
-
-  if (!question.typing) {
-    $("question").textContent = `Pitanje ${qIndex + 1}/20: Šta znači "${question.en}"?`;
-
-    $("typingArea").classList.add("hidden");
-    $("answers").classList.remove("hidden");
-
-    const wrongAnswers = shuffle(
-      current.words
-        .filter(word => word[1] !== question.bs)
-        .map(word => word[1])
-    ).slice(0, 3);
-
-    const choices = shuffle([question.bs, ...wrongAnswers]);
-
-    $("answers").innerHTML = choices.map((choice, index) => `
-      <button class="answer" data-answer="${index}">${choice}</button>
-    `).join("");
-
-    $("answers").querySelectorAll("[data-answer]").forEach((button, index) => {
-      button.addEventListener("click", () => {
-        checkAnswer(button, choices[index], question.bs);
-      });
-    });
-  } else {
-    $("question").textContent = `Pitanje ${qIndex + 1}/20: Kako se kaže na engleskom?`;
-
-    $("answers").classList.add("hidden");
-    $("typingArea").classList.remove("hidden");
-    $("typingWord").textContent = question.bs;
-    $("typedAnswer").focus();
-  }
-}
-
-function checkAnswer(button, choice, correct) {
-  if (waiting) return;
-  waiting = true;
-
-  const buttons = document.querySelectorAll("#answers button");
-  buttons.forEach(item => { item.disabled = true; });
-
-  if (choice === correct) {
-    button.style.backgroundColor = "#d9fbe5";
-    button.style.borderColor = "#36a269";
-
-    $("feedback").textContent = "✅ Tačno! Bravo! +10 bodova 🌟";
-    $("feedback").style.color = "#168044";
-
-    sessionScore++;
-    points += 10;
-  } else {
-    button.style.backgroundColor = "#ffe3e3";
-    button.style.borderColor = "#db6464";
-
-    $("feedback").textContent = "❌ Nije tačno! Tačan odgovor je: " + correct + " 💪";
-    $("feedback").style.color = "#c03939";
-
-    buttons.forEach(item => {
-      if (item.textContent.trim() === correct) {
-        item.style.backgroundColor = "#d9fbe5";
-        item.style.borderColor = "#36a269";
-      }
-    });
-    errorsList.push(questions[qIndex].en + " (" + questions[qIndex].bs + ")");
-  }
-
-  saveProgress();
-  showNextButton();
-}
-
-function checkTypedAnswer() {
-  if (waiting) return;
-
-  const answer = $("typedAnswer").value.trim();
-  if (!answer) {
-    $("feedback").textContent = "✍️ Prvo upiši odgovor!";
-    $("feedback").style.color = "#c03939";
-    return;
-  }
-
-  waiting = true;
-  $("typedAnswer").disabled = true;
-  $("checkTyped").disabled = true;
-
-  const correct = questions[qIndex].en;
-
-  if (normalize(answer) === normalize(correct)) {
-    $("feedback").textContent = "✅ Tačno! Odlično! +10 bodova 🌟";
-    $("feedback").style.color = "#168044";
-    sessionScore++;
-    points += 10;
-  } else {
-    $("feedback").textContent = "❌ Nije tačno! Tačan odgovor je: " + correct + " 💪";
-    $("feedback").style.color = "#c03939";
-    errorsList.push(correct + " (" + questions[qIndex].bs + ")");
-  }
-
-  saveProgress();
-  showNextButton();
-}
-
-function showNextButton() {
-  $("next").textContent =
-    qIndex === questions.length - 1 ? "Završi lekciju 🏆" : "Sljedeće pitanje ➜";
-  $("next").classList.remove("hidden");
-}
-
-function nextQuestion() {
-  if (qIndex < questions.length - 1) {
-    qIndex++;
-    showQuestion();
-    return;
-  }
-
-  if (!completed.includes(current.id)) {
-    completed.push(current.id);
-  }
-
-  saveProgress();
-
-  $("question").textContent = "🎉 Bravo! Završio/la si lekciju!";
-  $("answers").innerHTML = "";
-  $("answers").classList.add("hidden");
-  $("typingArea").classList.add("hidden");
-  $("feedback").style.color = "#168044";
-  $("feedback").textContent = `Tačnih odgovora: ${sessionScore} od 20. Osvojio/la si ${sessionScore * 10} bodova! 🏆`;
-
-  $("next").classList.add("hidden");
-  render();
-}
-
-// Dnevni izazov
-function openDailyChallenge() {
-  hideAllPanels();
-  $("dailyPanel").classList.remove("hidden");
-  $("dailyPanel").scrollIntoView({ behavior:"smooth", block:"start" });
-
-  const allWords = lessons.flatMap(l => l.words);
-  const dailySet = shuffle(allWords).slice(0, 5);
-
-  let dailyIndex = 0;
-  let dailyScore = 0;
-
-  function renderDailyQuestion() {
-    if (dailyIndex >= dailySet.length) {
-      points += dailyScore * 5;
-      saveProgress();
-      $("dailyContent").innerHTML = `
-        <h3>🎉 Izazov uspješno završen!</h3>
-        <p>Osvojio/la si dodatnih ${dailyScore * 5} bodova! ⭐</p>
-        <button class="action" id="dailyBackBtn">Nazad na lekcije</button>
-      `;
-      $("dailyBackBtn").addEventListener("click", showLessons);
-      return;
-    }
-
-    const item = dailySet[dailyIndex];
-    const wrong = shuffle(allWords.filter(w => w[1] !== item[1]).map(w => w[1])).slice(0, 3);
-    const options = shuffle([item[1], ...wrong]);
-
-    $("dailyContent").innerHTML = `
-      <p><b>Pitanje ${dailyIndex + 1}/5:</b> Šta znači "${item[0]}"?</p>
-      <div class="answers">
-        ${options.map(opt => `<button class="answer daily-ans" data-val="${opt}">${opt}</button>`).join("")}
-      </div>
-      <div id="dailyFeedback" style="margin-top:15px; font-weight:bold; min-height:24px;"></div>
-    `;
-
-    document.querySelectorAll(".daily-ans").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const val = btn.dataset.val;
-        if (val === item[1]) {
-          btn.style.background = "#d9fbe5";
-          btn.style.borderColor = "#36a269";
-          $("dailyFeedback").style.color = "#168044";
-          $("dailyFeedback").textContent = "✅ Tačno! +5 bodova";
-          dailyScore++;
-        } else {
-          btn.style.background = "#ffe3e3";
-          btn.style.borderColor = "#db6464";
-          $("dailyFeedback").style.color = "#c03939";
-          $("dailyFeedback").textContent = "❌ Netačno. Tačno je: " + item[1];
-        }
-        setTimeout(() => {
-          dailyIndex++;
-          renderDailyQuestion();
-        }, 1200);
-      });
-    });
-  }
-
-  renderDailyQuestion();
-}
-
-// Igra spajanja riječi i slika
-function openMatchingGame() {
-  hideAllPanels();
-  $("matchPanel").classList.remove("hidden");
-  $("matchPanel").scrollIntoView({ behavior:"smooth", block:"start" });
-  initMatchRound();
-}
-
-function initMatchRound() {
-  let matchMatchedCount = 0;
-  $("matchFeedback").textContent = "";
-  $("nextMatch").classList.add("hidden");
-
-  const sourceList = lessons[1].words; // Životinje
-  const selected = shuffle(sourceList).slice(0, 4);
-
-  const wordsPart = shuffle(selected.map(s => ({ en: s[0], id: s[0] })));
-  const emojisMap = { "Cat":"🐱", "Dog":"🐶", "Bird":"🐦", "Fish":"🐟", "Rabbit":"🐰", "Horse":"🐴", "Cow":"🐮", "Duck":"🦆", "Lion":"🦁", "Elephant":"🐘" };
-  const imgsPart = shuffle(selected.map(s => ({ en: s[0], emoji: emojisMap[s[0]] || "🌟", id: s[0] })));
-
-  let html = `
-    <div style="display:flex; flex-direction:column; gap:10px;">
-      <p style="margin:0; font-weight:bold; color:#6b7190;">Slike:</p>
-      ${imgsPart.map(img => `<button class="match-item match-img" data-id="${img.id}">${img.emoji}</button>`).join("")}
-    </div>
-    <div style="display:flex; flex-direction:column; gap:10px;">
-      <p style="margin:0; font-weight:bold; color:#6b7190;">Riječi:</p>
-      ${wordsPart.map(w => `<button class="match-item match-word" data-id="${w.id}">${w.en}</button>`).join("")}
-    </div>
-  `;
-  $("matchGrid").innerHTML = html;
-
-  let chosenImgBtn = null;
-  let chosenWordBtn = null;
-
-  document.querySelectorAll(".match-img").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (btn.classList.contains("matched")) return;
-      document.querySelectorAll(".match-img").forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-      chosenImgBtn = btn;
-      checkMatchSelection();
-    });
-  });
-
-  document.querySelectorAll(".match-word").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (btn.classList.contains("matched")) return;
-      document.querySelectorAll(".match-word").forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-      chosenWordBtn = btn;
-      checkMatchSelection();
-    });
-  });
-
-  function checkMatchSelection() {
-    if (chosenImgBtn && chosenWordBtn) {
-      if (chosenImgBtn.dataset.id === chosenWordBtn.dataset.id) {
-        chosenImgBtn.classList.remove("selected");
-        chosenWordBtn.classList.remove("selected");
-        chosenImgBtn.classList.add("matched");
-        chosenWordBtn.classList.add("matched");
-        chosenImgBtn.style.background = "#d9fbe5";
-        chosenWordBtn.style.background = "#d9fbe5";
-        chosenImgBtn.disabled = true;
-        chosenWordBtn.disabled = true;
-        
-        matchMatchedCount++;
-        points += 5;
-        saveProgress();
-        $("matchFeedback").style.color = "#168044";
-        $("matchFeedback").textContent = "✅ Odlično spajanje! +5 bodova ⭐";
-
-        chosenImgBtn = null;
-        chosenWordBtn = null;
-
-        if (matchMatchedCount === 4) {
-          $("matchFeedback").textContent = "🎉 Bravo! Uspješno si spojio/la sve parove!";
-          $("nextMatch").classList.remove("hidden");
-        }
-      } else {
-        $("matchFeedback").style.color = "#c03939";
-        $("matchFeedback").textContent = "❌ Nije par, pokušaj ponovo!";
-        chosenImgBtn.classList.remove("selected");
-        chosenWordBtn.classList.remove("selected");
-        chosenImgBtn = null;
-        chosenWordBtn = null;
-      }
-    }
-  }
-}
-
-// Pregled za roditelje
-function openParentsView() {
-  hideAllPanels();
-  $("parentsPanel").classList.remove("hidden");
-  $("parentsPanel").scrollIntoView({ behavior:"smooth", block:"start" });
-
-  $("pPoints").textContent = points;
-  $("pCompleted").textContent = completed.length;
-  $("pStreak").textContent = streak;
-
-  if (points >= 100) $("bBronze").classList.add("unlocked");
-  else $("bBronze").classList.remove("unlocked");
-
-  if (points >= 300) $("bSilver").classList.add("unlocked");
-  else $("bSilver").classList.remove("unlocked");
-
-  if (points >= 600) $("bGold").classList.add("unlocked");
-  else $("bGold").classList.remove("unlocked");
-
-  if (errorsList.length > 0) {
-    const uniqueErrors = [...new Set(errorsList)].slice(-10);
-    $("pErrors").innerHTML = uniqueErrors.join("<br>");
-  } else {
-    $("pErrors").textContent = "Nema zabilježenih grešaka. Bravo!";
-  }
-}
-
-function hideAllPanels() {
-  $("study").classList.add("hidden");
-  $("quiz").classList.add("hidden");
-  $("dailyPanel").classList.add("hidden");
-  $("matchPanel").classList.add("hidden");
-  $("parentsPanel").classList.add("hidden");
-}
-
-function showLessons() {
-  hideAllPanels();
-  window.scrollTo({ top:0, behavior:"smooth" });
-}
-
-function showError(error) {
-  const box = $("errorBox");
-  box.classList.remove("hidden");
-  box.textContent = "Došlo je do greške u aplikaciji: " + (error && error.message ? error.message : String(error));
-}
-
-window.addEventListener("error", event => {
-  showError(event.message || "Nepoznata greška");
-});
-
-// Sigurno postavljanje event listenera za dugmad
-$("startQuiz").addEventListener("click", startQuiz);
-$("wellDone").addEventListener("click", () => speak("Well done!"));
-$("checkTyped").addEventListener("click", checkTypedAnswer);
-$("next").addEventListener("click", nextQuestion);
-$("backHome").addEventListener("click", showLessons);
-$("backFromQuiz").addEventListener("click", showLessons);
-
-$("openDaily").addEventListener("click", openDailyChallenge);
-$("backFromDaily").addEventListener("click", showLessons);
-
-$("openMatching").addEventListener("click", openMatchingGame);
-$("nextMatch").addEventListener("click", initMatchRound);
-$("backFromMatch").addEventListener("click", showLessons);
-
-$("openParents").addEventListener("click", openParentsView);
-$("backFromParents").addEventListener("click", showLessons);
-
-$("resetData").addEventListener("click", () => {
-  if (confirm("Da li ste sigurni da želite resetovati sav napredak?")) {
-    localStorage.clear();
-    location.reload();
-  }
-});
-
-$("typedAnswer").addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    checkTypedAnswer();
-  }
-});
-
-try {
-  loadProgress();
-  render();
-} catch (error) {
-  showError(error);
-}
-</script>
-</body>
-</html>
+      <div><b>${w[0]}</b><br><span>${w[1]}</span></div>
+      <button class="sound" data-word="${i}">🔊 S
