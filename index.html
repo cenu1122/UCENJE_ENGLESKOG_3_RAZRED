@@ -176,7 +176,7 @@ button { touch-action: manipulation; }
   padding: 15px;
   border-radius: 12px;
   text-align: center;
-  font-size: 18px;
+  font-size: 24px;
   cursor: pointer;
   font-weight: bold;
 }
@@ -267,19 +267,19 @@ footer { text-align: center; color: #6b7190; padding: 25px; }
   <!-- Dnevni izazov panel -->
   <section class="panel hidden" id="dailyPanel">
     <h2>🎯 Dnevni izazov</h2>
-    <p>Riješi 5 brzih pitanja dana i osvoji ekstra bodove! (Dostupno jednom dnevno)</p>
+    <p>Riješi 5 brzih pitanja dana i osvoji ekstra bodove!</p>
     <div id="dailyContent"></div>
-    <button class="sound" id="backFromDaily">← Nazad</button>
+    <button class="sound" id="backFromDaily" style="margin-top:15px;">← Nazad</button>
   </section>
 
   <!-- Igra spajanja panel -->
   <section class="panel hidden" id="matchPanel">
     <h2>🧩 Spoji slike i riječi</h2>
     <p>Klikni na sliku/emoji, pa na odgovarajuću englesku riječ!</p>
-    <div id="matchFeedback" style="font-weight:bold; margin-bottom:10px;"></div>
+    <div id="matchFeedback" style="font-weight:bold; margin-bottom:10px; min-height:24px;"></div>
     <div class="match-grid" id="matchGrid"></div>
-    <button class="action hidden" id="nextMatch">Nova igra spajanja 🔄</button>
-    <button class="sound" id="backFromMatch">← Nazad</button>
+    <button class="action hidden" id="nextMatch" style="margin-top:15px;">Nova igra spajanja 🔄</button>
+    <button class="sound" id="backFromMatch" style="margin-top:15px;">← Nazad</button>
   </section>
 
   <!-- Roditeljski pregled panel -->
@@ -481,11 +481,6 @@ let streak = 0;
 let lastActiveDate = "";
 let errorsList = [];
 
-// Stanje za igru spajanja
-let matchSelectedWord = null;
-let matchPairs = [];
-let matchMatchedCount = 0;
-
 function loadProgress() {
   try {
     points = Number(localStorage.getItem("engPoints") || 0);
@@ -495,7 +490,6 @@ function loadProgress() {
     errorsList = JSON.parse(localStorage.getItem("engErrors") || "[]");
     if (!Array.isArray(errorsList)) errorsList = [];
 
-    // Streak logika
     const today = new Date().toDateString();
     lastActiveDate = localStorage.getItem("engLastDate") || "";
     streak = Number(localStorage.getItem("engStreak") || 0);
@@ -504,8 +498,6 @@ function loadProgress() {
       const yesterday = new Date(Date.now() - 86400000).toDateString();
       if (lastActiveDate === yesterday) {
         streak++;
-      } else if (lastActiveDate !== "") {
-        streak = 1;
       } else {
         streak = 1;
       }
@@ -645,8 +637,7 @@ function showQuestion() {
   const question = questions[qIndex];
 
   if (!question.typing) {
-    $("question").textContent =
-      `Pitanje ${qIndex + 1}/20: Šta znači "${question.en}"?`;
+    $("question").textContent = `Pitanje ${qIndex + 1}/20: Šta znači "${question.en}"?`;
 
     $("typingArea").classList.add("hidden");
     $("answers").classList.remove("hidden");
@@ -669,8 +660,7 @@ function showQuestion() {
       });
     });
   } else {
-    $("question").textContent =
-      `Pitanje ${qIndex + 1}/20: Kako se kaže na engleskom?`;
+    $("question").textContent = `Pitanje ${qIndex + 1}/20: Kako se kaže na engleskom?`;
 
     $("answers").classList.add("hidden");
     $("typingArea").classList.remove("hidden");
@@ -776,12 +766,12 @@ function nextQuestion() {
   render();
 }
 
-// 3. Dnevni izazov
+// Dnevni izazov
 function openDailyChallenge() {
   hideAllPanels();
   $("dailyPanel").classList.remove("hidden");
+  $("dailyPanel").scrollIntoView({ behavior:"smooth", block:"start" });
 
-  // Uzmi 5 nasumičnih riječi iz svih lekcija
   const allWords = lessons.flatMap(l => l.words);
   const dailySet = shuffle(allWords).slice(0, 5);
 
@@ -795,8 +785,9 @@ function openDailyChallenge() {
       $("dailyContent").innerHTML = `
         <h3>🎉 Izazov uspješno završen!</h3>
         <p>Osvojio/la si dodatnih ${dailyScore * 5} bodova! ⭐</p>
-        <button class="action" onclick="showLessons()">Nazad na lekcije</button>
+        <button class="action" id="dailyBackBtn">Nazad na lekcije</button>
       `;
+      $("dailyBackBtn").addEventListener("click", showLessons);
       return;
     }
 
@@ -809,7 +800,7 @@ function openDailyChallenge() {
       <div class="answers">
         ${options.map(opt => `<button class="answer daily-ans" data-val="${opt}">${opt}</button>`).join("")}
       </div>
-      <div id="dailyFeedback" style="margin-top:15px; font-weight:bold;"></div>
+      <div id="dailyFeedback" style="margin-top:15px; font-weight:bold; min-height:24px;"></div>
     `;
 
     document.querySelectorAll(".daily-ans").forEach(btn => {
@@ -838,33 +829,33 @@ function openDailyChallenge() {
   renderDailyQuestion();
 }
 
-// 1. Igra spajanja riječi i slika
+// Igra spajanja riječi i slika
 function openMatchingGame() {
   hideAllPanels();
   $("matchPanel").classList.remove("hidden");
+  $("matchPanel").scrollIntoView({ behavior:"smooth", block:"start" });
   initMatchRound();
 }
 
 function initMatchRound() {
-  matchMatchedCount = 0;
-  matchSelectedWord = null;
+  let matchMatchedCount = 0;
   $("matchFeedback").textContent = "";
   $("nextMatch").classList.add("hidden");
 
-  // Uzmi 4 nasumične riječi iz kategorije životinja ili hrane
-  const sourceList = lessons[1].words; // životinje
+  const sourceList = lessons[1].words; // Životinje
   const selected = shuffle(sourceList).slice(0, 4);
 
   const wordsPart = shuffle(selected.map(s => ({ en: s[0], id: s[0] })));
-  // Dodajemo emoji na osnovu naziva za vizuelni prikaz
   const emojisMap = { "Cat":"🐱", "Dog":"🐶", "Bird":"🐦", "Fish":"🐟", "Rabbit":"🐰", "Horse":"🐴", "Cow":"🐮", "Duck":"🦆", "Lion":"🦁", "Elephant":"🐘" };
   const imgsPart = shuffle(selected.map(s => ({ en: s[0], emoji: emojisMap[s[0]] || "🌟", id: s[0] })));
 
   let html = `
     <div style="display:flex; flex-direction:column; gap:10px;">
+      <p style="margin:0; font-weight:bold; color:#6b7190;">Slike:</p>
       ${imgsPart.map(img => `<button class="match-item match-img" data-id="${img.id}">${img.emoji}</button>`).join("")}
     </div>
     <div style="display:flex; flex-direction:column; gap:10px;">
+      <p style="margin:0; font-weight:bold; color:#6b7190;">Riječi:</p>
       ${wordsPart.map(w => `<button class="match-item match-word" data-id="${w.id}">${w.en}</button>`).join("")}
     </div>
   `;
@@ -930,18 +921,24 @@ function initMatchRound() {
   }
 }
 
-// 4. Pregled za roditelje
+// Pregled za roditelje
 function openParentsView() {
   hideAllPanels();
   $("parentsPanel").classList.remove("hidden");
+  $("parentsPanel").scrollIntoView({ behavior:"smooth", block:"start" });
 
   $("pPoints").textContent = points;
   $("pCompleted").textContent = completed.length;
   $("pStreak").textContent = streak;
 
   if (points >= 100) $("bBronze").classList.add("unlocked");
+  else $("bBronze").classList.remove("unlocked");
+
   if (points >= 300) $("bSilver").classList.add("unlocked");
+  else $("bSilver").classList.remove("unlocked");
+
   if (points >= 600) $("bGold").classList.add("unlocked");
+  else $("bGold").classList.remove("unlocked");
 
   if (errorsList.length > 0) {
     const uniqueErrors = [...new Set(errorsList)].slice(-10);
@@ -974,6 +971,7 @@ window.addEventListener("error", event => {
   showError(event.message || "Nepoznata greška");
 });
 
+// Sigurno postavljanje event listenera za dugmad
 $("startQuiz").addEventListener("click", startQuiz);
 $("wellDone").addEventListener("click", () => speak("Well done!"));
 $("checkTyped").addEventListener("click", checkTypedAnswer);
