@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Igra spajanja - Engleski kroz igru</title>
+<style>
+:root { --blue: #315bea; --ink: #202747; --bg: #f4f6ff; }
+body { margin: 0; background: var(--bg); font-family: Arial, sans-serif; color: var(--ink); padding: 20px; }
+.panel { max-width: 600px; margin: 40px auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 3px 15px #26346a12; text-align: center; }
+.action { background: var(--blue); color: white; border: 0; border-radius: 12px; padding: 13px 20px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 20px; }
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+.match-item { background: #f0f3ff; border: 2px solid #d0d9ff; padding: 15px; border-radius: 12px; text-align: center; font-size: 28px; cursor: pointer; font-weight: bold; }
+.match-item.selected { background: #d9fbe5; border-color: #36a269; }
+</style>
+</head>
+<body>
+<div class="panel">
+  <h2>🧩 Spoji slike i riječi</h2>
+  <p>Klikni na sliku/emoji, pa na odgovarajuću englesku riječ!</p>
+  <div id="matchFeedback" style="font-weight:bold; margin-bottom:10px; min-height:24px;"></div>
+  <div class="match-grid" id="matchGrid"></div>
+  <button class="action" onclick="initMatch()">Nova igra 🔄</button>
+  <br>
+  <a href="index.html" class="action" style="background:#6b7190;">← Nazad na lekcije</a>
+</div>
+
+<script>
+const items = [
+  {en:"Cat", emoji:"🐱"}, {en:"Dog", emoji:"🐶"}, {en:"Bird", emoji:"🐦"},
+  {en:"Fish", emoji:"🐟"}, {en:"Rabbit", emoji:"🐰"}, {en:"Horse", emoji:"🐴"}
+];
+
+function shuffle(arr) {
+  let c = [...arr];
+  for (let i = c.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [c[i], c[j]] = [c[j], c[i]];
+  }
+  return c;
+}
+
+let matchedCount = 0, chosenImg = null, chosenWord = null;
+
+function initMatch() {
+  matchedCount = 0; chosenImg = null; chosenWord = null;
+  document.getElementById("matchFeedback").textContent = "";
+  let selected = shuffle(items).slice(0, 4);
+  let imgs = shuffle(selected);
+  let words = shuffle(selected);
+
+  document.getElementById("matchGrid").innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      ${imgs.map(i => `<button class="match-item" onclick="selectImg(this, '${i.en}')">${i.emoji}</button>`).join("")}
+    </div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      ${words.map(w => `<button class="match-item" style="font-size:18px;" onclick="selectWord(this, '${w.en}')">${w.en}</button>`).join("")}
+    </div>
+  `;
+}
+
+window.selectImg = function(btn, val) {
+  if (btn.disabled) return;
+  document.querySelectorAll(".match-item").forEach(b => { if(!b.disabled && b.style.fontSize === "28px") b.classList.remove("selected"); });
+  btn.classList.add("selected");
+  chosenImg = val;
+  check();
+}
+
+window.selectWord = function(btn, val) {
+  if (btn.disabled) return;
+  document.querySelectorAll(".match-item").forEach(b => { if(!b.disabled && b.style.fontSize === "18px") b.classList.remove("selected"); });
+  btn.classList.add("selected");
+  chosenWord = val;
+  check();
+}
+
+function check() {
+  let fb = document.getElementById("matchFeedback");
+  if (chosenImg && chosenWord) {
+    if (chosenImg === chosenWord) {
+      fb.style.color = "#168044";
+      fb.textContent = "✅ Tačno! +5 bodova ⭐";
+      try {
+        let pts = Number(localStorage.getItem("engPoints") || 0) + 5;
+        localStorage.setItem("engPoints", String(pts));
+      } catch(e){}
+
+      document.querySelectorAll(".match-item").forEach(b => {
+        if (b.classList.contains("selected")) {
+          b.disabled = true;
+          b.style.background = "#d9fbe5";
+          b.classList.remove("selected");
+        }
+      });
+      matchedCount++;
+      chosenImg = null; chosenWord = null;
+      if (matchedCount === 4) {
+        fb.textContent = "🎉 Bravo! Uspješno si spojio sve parove!";
+      }
+    } else {
+      fb.style.color = "#c03939";
+      fb.textContent = "❌ Nije par, pokušaj ponovo!";
+      document.querySelectorAll(".match-item").forEach(b => b.classList.remove("selected"));
+      chosenImg = null; chosenWord = null;
+    }
+  }
+}
+
+initMatch();
+</script>
+</body>
+</html>
