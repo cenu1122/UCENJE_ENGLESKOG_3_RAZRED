@@ -172,4 +172,128 @@ function openLesson(id) {
   $("words").innerHTML = current.words.map((w, i) => `
     <div class="word">
       <div><b>${w[0]}</b><br><span>${w[1]}</span></div>
-      <button class="sound" data-word="${i}">🔊 S
+      <button class="sound" data-word="${i}">🔊 Slušaj</button>
+    </div>
+  `).join("");
+  $("words").querySelectorAll("[data-word]").forEach(b => {
+    b.addEventListener("click", () => speak(current.words[Number(b.dataset.word)][0]));
+  });
+  $("study").classList.remove("hidden");
+  $("quiz").classList.add("hidden");
+  $("study").scrollIntoView({ behavior:"smooth" });
+}
+
+function speak(w) {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  let v = new SpeechSynthesisUtterance(w);
+  v.lang = "en-GB"; v.rate = 0.8;
+  window.speechSynthesis.speak(v);
+}
+
+function startQuiz() {
+  if (!current) return;
+  questions = shuffle(current.words).map(w => ({en:w[0], bs:w[1], typing:false}))
+    .concat(shuffle(current.words).map(w => ({en:w[0], bs:w[1], typing:true})));
+  qIndex = 0; sessionScore = 0; waiting = false;
+  $("quiz").classList.remove("hidden");
+  $("study").classList.add("hidden");
+  showQuestion();
+}
+
+function showQuestion() {
+  waiting = false;
+  $("feedback").textContent = "";
+  $("next").classList.add("hidden");
+  $("typedAnswer").value = "";
+  $("typedAnswer").disabled = false;
+  $("checkTyped").disabled = false;
+  let q = questions[qIndex];
+  if (!q.typing) {
+    $("question").textContent = `Pitanje ${qIndex + 1}/20: Šta znači "${q.en}"?`;
+    $("typingArea").classList.add("hidden");
+    $("answers").classList.remove("hidden");
+    let wrong = shuffle(current.words.filter(w => w[1] !== q.bs).map(w => w[1])).slice(0, 3);
+    let choices = shuffle([q.bs, ...wrong]);
+    $("answers").innerHTML = choices.map((c, i) => `<button class="answer" data-answer="${i}">${c}</button>`).join("");
+    $("answers").querySelectorAll("[data-answer]").forEach((b, i) => {
+      b.addEventListener("click", () => checkAnswer(b, choices[i], q.bs));
+    });
+  } else {
+    $("question").textContent = `Pitanje ${qIndex + 1}/20: Kako se kaže na engleskom?`;
+    $("answers").classList.add("hidden");
+    $("typingArea").classList.remove("hidden");
+    $("typingWord").textContent = q.bs;
+    $("typedAnswer").focus();
+  }
+}
+
+function checkAnswer(btn, choice, correct) {
+  if (waiting) return;
+  waiting = true;
+  document.querySelectorAll("#answers button").forEach(b => b.disabled = true);
+  if (choice === correct) {
+    btn.style.backgroundColor = "#d9fbe5";
+    $("feedback").style.color = "#168044";
+    $("feedback").textContent = "✅ Tačno! +10 bodova 🌟";
+    sessionScore++; points += 10;
+  } else {
+    btn.style.backgroundColor = "#ffe3e3";
+    $("feedback").style.color = "#c03939";
+    $("feedback").textContent = "❌ Tačan odgovor je: " + correct;
+    try {
+      let errs = JSON.parse(localStorage.getItem("engErrors") || "[]");
+      errs.push(questions[qIndex].en + " (" + questions[qIndex].bs + ")");
+      localStorage.setItem("engErrors", JSON.stringify(errs));
+    } catch(e) {}
+  }
+  saveProgress();
+  $("next").classList.remove("hidden");
+}
+
+function checkTyped() {
+  if (waiting) return;
+  let ans = $("typedAnswer").value.trim();
+  if (!ans) return;
+  waiting = true;
+  $("typedAnswer").disabled = true;
+  $("checkTyped").disabled = true;
+  let correct = questions[qIndex].en;
+  if (ans.toLowerCase() === correct.toLowerCase()) {
+    $("feedback").style.color = "#168044";
+    $("feedback").textContent = "✅ Tačno! +10 bodova 🌟";
+    sessionScore++; points += 10;
+  } else {
+    $("feedback").style.color = "#c03939";
+    $("feedback").textContent = "❌ Tačan odgovor je: " + correct;
+  }
+  saveProgress();
+  $("next").classList.remove("hidden");
+}
+
+$("next").addEventListener("click", () => {
+  if (qIndex < questions.length - 1) {
+    qIndex++; showQuestion();
+  } else {
+    if (!completed.includes(current.id)) completed.push(current.id);
+    saveProgress();
+    $("question").textContent = "🎉 Završio/la si lekciju!";
+    $("answers").innerHTML = ""; $("typingArea").classList.add("hidden");
+    $("feedback").textContent = `Osvojio/la si ${sessionScore * 10} bodova!`;
+    $("next").classList.add("hidden");
+    render();
+  }
+});
+
+$("startQuiz").addEventListener("click", startQuiz);
+$("wellDone").addEventListener("click", () => speak("Well done!"));
+$("checkTyped").addEventListener("click", checkTyped);
+$("backHome").addEventListener("click", () => { $("study").classList.add("hidden"); });
+$("backFromQuiz").addEventListener("click", () => { $("quiz").classList.add("hidden"); });
+$("typedAnswer").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); checkTyped(); } });
+
+loadProgress();
+render();
+</script>
+</body>
+</html>
