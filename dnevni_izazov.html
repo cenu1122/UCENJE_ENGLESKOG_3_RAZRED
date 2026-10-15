@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dnevni izazov - Engleski kroz igru</title>
+<style>
+:root { --blue: #315bea; --ink: #202747; --bg: #f4f6ff; }
+body { margin: 0; background: var(--bg); font-family: Arial, sans-serif; color: var(--ink); padding: 20px; }
+.panel { max-width: 600px; margin: 40px auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 3px 15px #26346a12; text-align: center; }
+.action { background: var(--blue); color: white; border: 0; border-radius: 12px; padding: 13px 20px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 20px; }
+.answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+.answer { padding: 15px; border: 2px solid #e0e5fa; border-radius: 12px; background: white; cursor: pointer; font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="panel">
+  <h2>🎯 Dnevni izazov</h2>
+  <p>Riješi 5 brzih pitanja i osvoji bonus bodove!</p>
+  <div id="dailyContent">Učitavanje...</div>
+  <br>
+  <a href="index.html" class="action">← Nazad na lekcije</a>
+</div>
+
+<script>
+const allWords = [
+  ["Hello","Zdravo"],["Good morning","Dobro jutro"],["Cat","Mačka"],["Dog","Pas"],
+  ["Red","Crvena"],["Blue","Plava"],["One","Jedan"],["Two","Dva"],
+  ["Apple","Jabuka"],["Milk","Mlijeko"],["Book","Knjiga"],["Pencil","Olovka"]
+];
+
+function shuffle(arr) {
+  let c = [...arr];
+  for (let i = c.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [c[i], c[j]] = [c[j], c[i]];
+  }
+  return c;
+}
+
+let dailySet = shuffle(allWords).slice(0, 5);
+let dIndex = 0, dScore = 0;
+
+function renderQuestion() {
+  if (dIndex >= dailySet.length) {
+    try {
+      let pts = Number(localStorage.getItem("engPoints") || 0) + (dScore * 5);
+      localStorage.setItem("engPoints", String(pts));
+    } catch(e) {}
+    document.getElementById("dailyContent").innerHTML = `
+      <h3>🎉 Bravo! Izazov je uspješno završen!</h3>
+      <p>Osvojio/la si dodatnih ${dScore * 5} bodova! ⭐</p>
+    `;
+    return;
+  }
+
+  let item = dailySet[dIndex];
+  let wrong = shuffle(allWords.filter(w => w[1] !== item[1]).map(w => w[1])).slice(0, 3);
+  let options = shuffle([item[1], ...wrong]);
+
+  document.getElementById("dailyContent").innerHTML = `
+    <p><b>Pitanje ${dIndex + 1}/5:</b> Šta znači "${item[0]}"?</p>
+    <div class="answers">
+      ${options.map(opt => `<button class="answer" onclick="check('${opt}', '${item[1]}')">${opt}</button>`).join("")}
+    </div>
+    <div id="fb" style="margin-top:15px; font-weight:bold;"></div>
+  `;
+}
+
+window.check = function(val, correct) {
+  let fb = document.getElementById("fb");
+  if (val === correct) {
+    fb.style.color = "#168044";
+    fb.textContent = "✅ Tačno! +5 bodova";
+    dScore++;
+  } else {
+    fb.style.color = "#c03939";
+    fb.textContent = "❌ Netačno. Tačno je: " + correct;
+  }
+  setTimeout(() => { dIndex++; renderQuestion(); }, 1200);
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
