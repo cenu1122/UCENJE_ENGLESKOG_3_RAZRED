@@ -37,6 +37,8 @@ button { touch-action: manipulation; }
 footer { text-align: center; color: #6b7190; padding: 25px; }
 @media(max-width:450px) { main { padding: 12px; } .answers { grid-template-columns: 1fr; } }
 </style>
+<!-- Supabase skripta -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <header>
@@ -46,12 +48,11 @@ footer { text-align: center; color: #6b7190; padding: 25px; }
 <main>
   <div class="stats">
     <div class="stat"><strong id="points">0 ⭐</strong>Bodovi</div>
-    <div class="stat"><strong id="done">0 / 14</strong>Završene lekcije</div>
+    <div class="stat"><strong id="done">0 / 0</strong>Završene lekcije</div>
     <div class="stat"><strong id="streak">🔥 0 dana</strong>Niz učenja</div>
     <div class="stat"><strong id="badgeLevel">🥉 Brončani</strong>Nivo</div>
   </div>
 
-  <!-- Dugmad koja vode na druge stranice -->
   <div class="extra-modes">
     <a href="dnevni_izazov.html" class="action">🎯 Dnevni izazov</a>
     <a href="spajanje.html" class="action">🧩 Igra spajanja</a>
@@ -89,20 +90,17 @@ footer { text-align: center; color: #6b7190; padding: 25px; }
 <footer>💛 Mali koraci, velike riječi! Keep learning!</footer>
 
 <script>
-  <!-- Supabase skripta -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-// Supabase konekcija sa tvojim pravim URL-om i ključem
+// Supabase konekcija sa tvojim podacima
 const SUPABASE_URL = 'https://lvvidixbdtdjfwxxxqzr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_DMELD0DRGcKD9u12lowjgw_sPBaLqhT';
 
 const { createClient } = supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let lessons = []; // Ovdje će se puniti lekcije iz baze
+let lessons = [];
+let current = null, questions = [], qIndex = 0, sessionScore = 0, waiting = false, points = 0, completed = [];
+const $ = id => document.getElementById(id);
 
-// Funkcija koja povlači podatke iz tabele LESSONS
 async function loadLessonsFromSupabase() {
     try {
         let { data, error } = await _supabase.from('LESSONS').select('*');
@@ -112,20 +110,19 @@ async function loadLessonsFromSupabase() {
             return;
         }
 
-        // Grupisanje redova iz baze u format lekcija sa riječima
         const grouped = {};
         data.forEach(row => {
             const naziv = row.naziv || row.NAZIV;
             const lekcija = row.lekcije || row.LEKCIJE;
             const prevod = row.prevod || row.PREVOD;
             
-            // Generisanje ID-ja za lekciju
             let id = naziv.toLowerCase()
                 .replace(/\s+/g, '_')
                 .replace(/č/g, 'c').replace(/ć/g, 'c')
                 .replace(/š/g, 's').replace(/ž/g, 'z')
                 .replace(/đ/g, 'd');
 
+            // Svi originalni i dodatni emotikoni za svaku lekciju
             let emoji = "📚";
             if (naziv.includes("Pozdravi")) emoji = "👋";
             else if (naziv.includes("Životinje")) emoji = "🐶";
@@ -166,10 +163,6 @@ async function loadLessonsFromSupabase() {
         console.error('Došlo je do greške:', err);
     }
 }
-
-// Ostatak aplikacije
-const $ = id => document.getElementById(id);
-let current = null, questions = [], qIndex = 0, sessionScore = 0, waiting = false, points = 0, completed = [];
 
 function loadProgress() {
     try {
@@ -351,212 +344,6 @@ $("typedAnswer").addEventListener("keydown", e => { if (e.key === "Enter") { e.p
 
 // Pokretanje učitavanja iz baze
 loadLessonsFromSupabase();
-</script>
-const lessons = [
-{ id:"greetings", name:"Pozdravi", emoji:"👋", intro:"Pozdravi prijatelje na engleskom.", words:[["Hello","Zdravo"],["Good morning","Dobro jutro"],["Goodbye","Doviđenja"],["Thank you","Hvala"],["Please","Molim"],["Good night","Laku noć"],["Good afternoon","Dobar dan"],["You're welcome","Nema na čemu"],["How are you?","Kako si?"],["I'm fine","Dobro sam"]] },
-{ id:"animals", name:"Životinje", emoji:"🐶", intro:"Upoznaj životinje na engleskom.", words:[["Cat","Mačka"],["Dog","Pas"],["Bird","Ptica"],["Fish","Riba"],["Rabbit","Zec"],["Horse","Konj"],["Cow","Krava"],["Duck","Patka"],["Lion","Lav"],["Elephant","Slon"]] },
-{ id:"colors", name:"Boje", emoji:"🎨", intro:"Nauči nazive boja.", words:[["Red","Crvena"],["Blue","Plava"],["Green","Zelena"],["Yellow","Žuta"],["Purple","Ljubičasta"],["Orange","Narandžasta"],["Pink","Roza"],["Black","Crna"],["White","Bijela"],["Brown","Smeđa"]] },
-{ id:"numbers", name:"Brojevi", emoji:"🔢", intro:"Nauči brojati na engleskom.", words:[["One","Jedan"],["Two","Dva"],["Three","Tri"],["Four","Četiri"],["Five","Pet"],["Six","Šest"],["Seven","Sedam"],["Eight","Osam"],["Nine","Devet"],["Ten","Deset"]] },
-{ id:"food", name:"Hrana", emoji:"🍎", intro:"Nauči riječi za hranu i piće.", words:[["Apple","Jabuka"],["Bread","Hljeb"],["Milk","Mlijeko"],["Water","Voda"],["Banana","Banana"],["Cheese","Sir"],["Egg","Jaje"],["Rice","Riža"],["Orange","Narandža"],["Juice","Sok"]] },
-{ id:"school", name:"Škola", emoji:"🎒", intro:"Nauči riječi koje koristimo u školi.", words:[["Book","Knjiga"],["Pencil","Olovka"],["School","Škola"],["Teacher","Učitelj/učiteljica"],["Friend","Prijatelj"],["Pen","Hemijska olovka"],["Bag","Torba"],["Desk","Školska klupa"],["Chair","Stolica"],["Notebook","Sveska"]] },
-{ id:"family", name:"Porodica", emoji:"👨‍👩‍👧", intro:"Upoznaj članove porodice.", words:[["Mother","Majka"],["Father","Otac"],["Sister","Sestra"],["Brother","Brat"],["Family","Porodica"],["Grandmother","Baka"],["Grandfather","Djed"],["Baby","Beba"],["Aunt","Tetka"],["Uncle","Ujak/stric"]] },
-{ id:"body", name:"Dijelovi tijela", emoji:"🧒", intro:"Nauči imenovati dijelove tijela.", words:[["Head","Glava"],["Eyes","Oči"],["Nose","Nos"],["Hands","Ruke"],["Feet","Stopala"],["Mouth","Usta"],["Ears","Uši"],["Hair","Kosa"],["Arms","Ruke"],["Legs","Noge"]] },
-{ id:"clothes", name:"Odjeća", emoji:"👕", intro:"Nauči nazive odjeće.", words:[["Shirt","Majica"],["Pants","Hlače"],["Shoes","Cipele"],["Hat","Kapa"],["Coat","Kaput"],["Socks","Čarape"],["Dress","Haljina"],["Jacket","Jakna"],["Scarf","Šal"],["Gloves","Rukavice"]] },
-{ id:"weather", name:"Vrijeme", emoji:"☀️", intro:"Kakvo je vrijeme?", words:[["Sun","Sunce"],["Rain","Kiša"],["Snow","Snijeg"],["Wind","Vjetar"],["Cloud","Oblak"],["Hot","Vruće"],["Cold","Hladno"],["Storm","Oluja"],["Sunny","Sunčano"],["Rainy","Kišovito"]] },
-{ id:"house", name:"Kuća", emoji:"🏠", intro:"Prostorije i dijelovi kuće.", words:[["House","Kuća"],["Door","Vrata"],["Window","Prozor"],["Room","Soba"],["Kitchen","Kuhinja"],["Bathroom","Kupatilo"],["Bed","Krevet"],["Table","Sto"],["Lamp","Lampa"],["Garden","Bašta"]] },
-{ id:"transport", name:"Prevoz", emoji:"🚗", intro:"Sredstva prevoza.", words:[["Car","Auto"],["Bus","Autobus"],["Train","Voz"],["Plane","Avion"],["Bike","Bicikl"],["Ship","Brod"],["Taxi","Taksi"],["Truck","Kamion"],["Road","Cesta"],["Wheel","Točak"]] },
-{ id:"emotions", name:"Emocije", emoji:"😊", intro:"Kako se osjećaš?", words:[["Happy","Sretan"],["Sad","Tužan"],["Angry","Ljut"],["Tired","Umoran"],["Scared","Uplašen"],["Excited","Uzbuđen"],["Hungry","Gladan"],["Thirsty","Žedan"],["Cold","Hladno mu je"],["Hot","Vruće mu je"]] },
-{ id:"sentences", name:"Kratke rečenice", emoji:"💬", intro:"Svakodnevne rečenice.", words:[["I like apples","Volim jabuke"],["My name is...","Moje ime je..."],["I am happy","Sretan sam"],["Look at the dog","Pogledaj psa"],["Give me water","Daj mi vode"],["Good morning friend","Dobro jutro prijatelju"],["Let's play","Hajde da se igramo"],["Open the book","Otvorite knjigu"],["Close the door","Zatvori vrata"],["I love you","Volim te"]] }
-];
-
-const $ = id => document.getElementById(id);
-let current = null, questions = [], qIndex = 0, sessionScore = 0, waiting = false, points = 0, completed = [];
-
-function loadProgress() {
-  try {
-    points = Number(localStorage.getItem("engPoints") || 0);
-    completed = JSON.parse(localStorage.getItem("engDone") || "[]");
-    let streak = Number(localStorage.getItem("engStreak") || 0);
-    let today = new Date().toDateString();
-    if (localStorage.getItem("engLastDate") !== today) {
-      streak = streak ? streak + 1 : 1;
-      localStorage.setItem("engLastDate", today);
-      localStorage.setItem("engStreak", String(streak));
-    }
-    $("streak").textContent = "🔥 " + streak + " dana";
-  } catch(e) {}
-}
-
-function saveProgress() {
-  try {
-    localStorage.setItem("engPoints", String(points));
-    localStorage.setItem("engDone", JSON.stringify(completed));
-  } catch(e) {}
-  updateDisplay();
-}
-
-function updateDisplay() {
-  $("points").textContent = points + " ⭐";
-  $("done").textContent = completed.length + " / " + lessons.length;
-  let lvl = "🥉 Brončani";
-  if (points >= 600) lvl = "🥇 Zlatni";
-  else if (points >= 300) lvl = "🥈 Srebrni";
-  $("badgeLevel").textContent = lvl;
-}
-
-function shuffle(arr) {
-  let c = [...arr];
-  for (let i = c.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [c[i], c[j]] = [c[j], c[i]];
-  }
-  return c;
-}
-
-function render() {
-  updateDisplay();
-  $("lessons").innerHTML = lessons.map(l => `
-    <button class="lesson" data-lesson="${l.id}">
-      <span class="emoji">${l.emoji}</span>
-      <b>${l.name}</b>
-      <div style="margin-top:8px;color:#69718d;font-size:13px">${completed.includes(l.id) ? "✅ Završeno" : "10 riječi"}</div>
-    </button>
-  `).join("");
-  document.querySelectorAll("[data-lesson]").forEach(b => {
-    b.addEventListener("click", () => openLesson(b.dataset.lesson));
-  });
-}
-
-function openLesson(id) {
-  current = lessons.find(l => l.id === id);
-  if (!current) return;
-  $("lessonTitle").textContent = current.emoji + " " + current.name;
-  $("lessonIntro").textContent = current.intro;
-  $("words").innerHTML = current.words.map((w, i) => `
-    <div class="word">
-      <div><b>${w[0]}</b><br><span>${w[1]}</span></div>
-      <button class="sound" data-word="${i}">🔊 Slušaj</button>
-    </div>
-  `).join("");
-  $("words").querySelectorAll("[data-word]").forEach(b => {
-    b.addEventListener("click", () => speak(current.words[Number(b.dataset.word)][0]));
-  });
-  $("study").classList.remove("hidden");
-  $("quiz").classList.add("hidden");
-  $("study").scrollIntoView({ behavior:"smooth" });
-}
-
-function speak(w) {
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  let v = new SpeechSynthesisUtterance(w);
-  v.lang = "en-GB"; v.rate = 0.8;
-  window.speechSynthesis.speak(v);
-}
-
-function startQuiz() {
-  if (!current) return;
-  questions = shuffle(current.words).map(w => ({en:w[0], bs:w[1], typing:false}))
-    .concat(shuffle(current.words).map(w => ({en:w[0], bs:w[1], typing:true})));
-  qIndex = 0; sessionScore = 0; waiting = false;
-  $("quiz").classList.remove("hidden");
-  $("study").classList.add("hidden");
-  showQuestion();
-}
-
-function showQuestion() {
-  waiting = false;
-  $("feedback").textContent = "";
-  $("next").classList.add("hidden");
-  $("typedAnswer").value = "";
-  $("typedAnswer").disabled = false;
-  $("checkTyped").disabled = false;
-  let q = questions[qIndex];
-  if (!q.typing) {
-    $("question").textContent = `Pitanje ${qIndex + 1}/20: Šta znači "${q.en}"?`;
-    $("typingArea").classList.add("hidden");
-    $("answers").classList.remove("hidden");
-    let wrong = shuffle(current.words.filter(w => w[1] !== q.bs).map(w => w[1])).slice(0, 3);
-    let choices = shuffle([q.bs, ...wrong]);
-    $("answers").innerHTML = choices.map((c, i) => `<button class="answer" data-answer="${i}">${c}</button>`).join("");
-    $("answers").querySelectorAll("[data-answer]").forEach((b, i) => {
-      b.addEventListener("click", () => checkAnswer(b, choices[i], q.bs));
-    });
-  } else {
-    $("question").textContent = `Pitanje ${qIndex + 1}/20: Kako se kaže na engleskom?`;
-    $("answers").classList.add("hidden");
-    $("typingArea").classList.remove("hidden");
-    $("typingWord").textContent = q.bs;
-    $("typedAnswer").focus();
-  }
-}
-
-function checkAnswer(btn, choice, correct) {
-  if (waiting) return;
-  waiting = true;
-  document.querySelectorAll("#answers button").forEach(b => b.disabled = true);
-  if (choice === correct) {
-    btn.style.backgroundColor = "#d9fbe5";
-    $("feedback").style.color = "#168044";
-    $("feedback").textContent = "✅ Tačno! +10 bodova 🌟";
-    sessionScore++; points += 10;
-  } else {
-    btn.style.backgroundColor = "#ffe3e3";
-    $("feedback").style.color = "#c03939";
-    $("feedback").textContent = "❌ Tačan odgovor je: " + correct;
-    try {
-      let errs = JSON.parse(localStorage.getItem("engErrors") || "[]");
-      errs.push(questions[qIndex].en + " (" + questions[qIndex].bs + ")");
-      localStorage.setItem("engErrors", JSON.stringify(errs));
-    } catch(e) {}
-  }
-  saveProgress();
-  $("next").classList.remove("hidden");
-}
-
-function checkTyped() {
-  if (waiting) return;
-  let ans = $("typedAnswer").value.trim();
-  if (!ans) return;
-  waiting = true;
-  $("typedAnswer").disabled = true;
-  $("checkTyped").disabled = true;
-  let correct = questions[qIndex].en;
-  if (ans.toLowerCase() === correct.toLowerCase()) {
-    $("feedback").style.color = "#168044";
-    $("feedback").textContent = "✅ Tačno! +10 bodova 🌟";
-    sessionScore++; points += 10;
-  } else {
-    $("feedback").style.color = "#c03939";
-    $("feedback").textContent = "❌ Tačan odgovor je: " + correct;
-  }
-  saveProgress();
-  $("next").classList.remove("hidden");
-}
-
-$("next").addEventListener("click", () => {
-  if (qIndex < questions.length - 1) {
-    qIndex++; showQuestion();
-  } else {
-    if (!completed.includes(current.id)) completed.push(current.id);
-    saveProgress();
-    $("question").textContent = "🎉 Završio/la si lekciju!";
-    $("answers").innerHTML = ""; $("typingArea").classList.add("hidden");
-    $("feedback").textContent = `Osvojio/la si ${sessionScore * 10} bodova!`;
-    $("next").classList.add("hidden");
-    render();
-  }
-});
-
-$("startQuiz").addEventListener("click", startQuiz);
-$("wellDone").addEventListener("click", () => speak("Well done!"));
-$("checkTyped").addEventListener("click", checkTyped);
-$("backHome").addEventListener("click", () => { $("study").classList.add("hidden"); });
-$("backFromQuiz").addEventListener("click", () => { $("quiz").classList.add("hidden"); });
-$("typedAnswer").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); checkTyped(); } });
-
-loadProgress();
-render();
 </script>
 </body>
 </html>
