@@ -102,65 +102,121 @@ let current = null, questions = [], qIndex = 0, sessionScore = 0, waiting = fals
 const $ = id => document.getElementById(id);
 
 async function loadLessonsFromSupabase() {
+    const lessonGrid = $("lessons");
+    lessonGrid.innerHTML = '<p>⏳ Učitavam sve lekcije iz Supabase baze...</p>';
+
     try {
-        let { data, error } = await _supabase.from('LESSONS').select('*');
-        
-        if (error) {
-            console.error('Greška pri učitavanju iz baze:', error);
+        // Supabase vraća ograničen broj redova po zahtjevu, zato čitamo stranice
+        // dok ne preuzmemo sve redove iz tabele.
+        const pageSize = 1000;
+        let allRows = [];
+        let from = 0;
+
+        while (true) {
+            const { data, error } = await _supabase
+                .from("LESSONS")
+                .select("*")
+                .range(from, from + pageSize - 1);
+
+            if (error) throw error;
+            if (!data || data.length === 0) break;
+
+            allRows = allRows.concat(data);
+            if (data.length < pageSize) break;
+            from += pageSize;
+        }
+
+        const grouped = new Map();
+
+        const getValue = (row, candidates) => {
+            for (const key of candidates) {
+                if (row[key] !== undefined && row[key] !== null &&
+                    String(row[key]).trim() !== "") return String(row[key]).trim();
+            }
+            // Podržava i slučaj kada se nazivi kolona razlikuju samo po velikim/malim slovima.
+            const rowKey = Object.keys(row).find(k =>
+                candidates.some(c => k.toLowerCase() === c.toLowerCase())
+            );
+            return rowKey && row[rowKey] != null ? String(row[rowKey]).trim() : "";
+        };
+
+        const makeId = name => name.toLocaleLowerCase("bs")
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d").replace(/[^a-z0-9]+/g, "_")
+            .replace(/^_+|_+$/g, "");
+
+        const emojiFor = name => {
+            const n = name.toLocaleLowerCase("bs");
+            if (n.includes("pozdrav")) return "👋";
+            if (n.includes("životinj") || n.includes("zivotinj")) return "🐶";
+            if (n.includes("boj")) return "🎨";
+            if (n.includes("broj")) return "🔢";
+            if (n.includes("hran")) return "🍎";
+            if (n.includes("škol") || n.includes("skol")) return "🎒";
+            if (n.includes("porodic") || n.includes("obitelj")) return "👨‍👩‍👧";
+            if (n.includes("tijel") || n.includes("body")) return "🧒";
+            if (n.includes("odjeć") || n.includes("odjec")) return "👕";
+            if (n.includes("vrijeme") || n.includes("weather")) return "☀️";
+            if (n.includes("kuć") || n.includes("kuc")) return "🏠";
+            if (n.includes("prevoz") || n.includes("transport")) return "🚗";
+            if (n.includes("emocij") || n.includes("feeling")) return "😊";
+            if (n.includes("rečenic") || n.includes("recenic")) return "💬";
+            if (n.includes("sport")) return "⚽";
+            if (n.includes("prirod") || n.includes("nature")) return "🌳";
+            if (n.includes("profesij") || n.includes("job")) return "👨‍⚕️";
+            if (n.includes("tehnolog")) return "💻";
+            return "📚";
+        };
+
+        for (const row of allRows) {
+            // Uobičajeni nazivi kolona; prilagodi listu ako je tvoja tabela drugačija.
+            const name = getValue(row, ["naziv", "NAZIV", "tema", "title", "lesson_name", "naziv_lekcije"]);
+            const english = getValue(row, ["lekcije", "LEKCIJE", "lekcija", "rijec", "riječ", "word", "english", "engleski"]);
+            const bosnian = getValue(row, ["prevod", "PREVOD", "prijevod", "translation", "bosanski", "znacenje", "značenje"]);
+
+            if (!name || !english || !bosnian) {
+                console.warn("Preskačem red koji nema naziv teme, riječ ili prevod:", row);
+                continue;
+            }
+
+            const id = makeId(name);
+            if (!grouped.has(id)) {
+                grouped.set(id, {
+                    id,
+                    name,
+                    emoji: emojiFor(name),
+                    intro: "Nauči riječi za temu: " + name,
+                    words: []
+                });
+            }
+
+            const lesson = grouped.get(id);
+            // Spriječi duple riječi ako se isti zapis ponavlja u tabeli.
+            if (!lesson.words.some(w => w[0].toLocaleLowerCase() === english.toLocaleLowerCase()
+                && w[1].toLocaleLowerCase() === bosnian.toLocaleLowerCase())) {
+                lesson.words.push([english, bosnian]);
+            }
+        }
+
+        lessons = Array.from(grouped.values()).filter(l => l.words.length > 0);
+
+        if (lessons.length === 0) {
+            lessonGrid.innerHTML =
+                '<p>⚠️ Povezivanje s bazom je uspjelo, ali nisu pronađene lekcije s očekivanim kolonama. ' +
+                'Provjeri da tabela <b>LESSONS</b> ima naziv teme, englesku riječ i prevod.</p>';
+            $("done").textContent = "0 / 0";
             return;
         }
 
-        const grouped = {};
-        data.forEach(row => {
-            const naziv = row.naziv || row.NAZIV;
-            const lekcija = row.lekcije || row.LEKCIJE;
-            const prevod = row.prevod || row.PREVOD;
-            
-            let id = naziv.toLowerCase()
-                .replace(/\s+/g, '_')
-                .replace(/č/g, 'c').replace(/ć/g, 'c')
-                .replace(/š/g, 's').replace(/ž/g, 'z')
-                .replace(/đ/g, 'd');
-
-            // Svi originalni i dodatni emotikoni za svaku lekciju
-            let emoji = "📚";
-            if (naziv.includes("Pozdravi")) emoji = "👋";
-            else if (naziv.includes("Životinje")) emoji = "🐶";
-            else if (naziv.includes("Boje")) emoji = "🎨";
-            else if (naziv.includes("Brojevi")) emoji = "🔢";
-            else if (naziv.includes("Hrana")) emoji = "🍎";
-            else if (naziv.includes("Škola")) emoji = "🎒";
-            else if (naziv.includes("Porodica")) emoji = "👨‍👩‍👧";
-            else if (naziv.includes("tijela")) emoji = "🧒";
-            else if (naziv.includes("Odjeća")) emoji = "👕";
-            else if (naziv.includes("Vrijeme")) emoji = "☀️";
-            else if (naziv.includes("Kuća")) emoji = "🏠";
-            else if (naziv.includes("Prevoz")) emoji = "🚗";
-            else if (naziv.includes("Emocije")) emoji = "😊";
-            else if (naziv.includes("rečenice")) emoji = "💬";
-            else if (naziv.includes("sportovi")) emoji = "⚽";
-            else if (naziv.includes("Priroda")) emoji = "🌳";
-            else if (naziv.includes("Profesije")) emoji = "👨‍⚕️";
-            else if (naziv.includes("Tehnologija")) emoji = "💻";
-
-            if (!grouped[naziv]) {
-                grouped[naziv] = {
-                    id: id,
-                    name: naziv,
-                    emoji: emoji,
-                    intro: "Nauči riječi za temu: " + naziv,
-                    words: []
-                };
-            }
-            grouped[naziv].words.push([lekcija, prevod]);
-        });
-
-        lessons = Object.values(grouped);
         loadProgress();
         render();
-
+        console.info(`Učitano ${allRows.length} redova i ${lessons.length} lekcija iz Supabase baze.`);
     } catch (err) {
-        console.error('Došlo je do greške:', err);
+        console.error("Greška pri učitavanju lekcija iz Supabase:", err);
+        lessonGrid.innerHTML =
+            '<p>❌ Ne mogu učitati lekcije iz Supabase baze.</p>' +
+            '<p>Provjeri naziv tabele <b>LESSONS</b>, dozvole za čitanje (RLS) i Supabase URL/ključ.</p>' +
+            '<p style="font-size:13px;color:#69718d">Detalj greške vidi u konzoli preglednika (F12 → Console).</p>';
     }
 }
 
@@ -338,8 +394,8 @@ $("next").addEventListener("click", () => {
 $("startQuiz").addEventListener("click", startQuiz);
 $("wellDone").addEventListener("click", () => speak("Well done!"));
 $("checkTyped").addEventListener("click", checkTyped);
-$("backHome").addEventListener("click", () => { $("study").classList.add("hidden"); });
-$("backFromQuiz").addEventListener("click", () => { $("quiz").classList.add("hidden"); });
+$("backHome").addEventListener("click", () => { $("study").classList.add("hidden"); $("quiz").classList.add("hidden"); window.scrollTo({top: 0, behavior: "smooth"}); });
+$("backFromQuiz").addEventListener("click", () => { $("quiz").classList.add("hidden"); $("study").classList.add("hidden"); window.scrollTo({top: 0, behavior: "smooth"}); });
 $("typedAnswer").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); checkTyped(); } });
 
 // Pokretanje učitavanja iz baze
